@@ -1,0 +1,3763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Science Olympiad Interview HQ</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    :root {
+        --bg: #f4f6f8;
+        --card: #ffffff;
+        --text: #17202a;
+        --muted: #68737d;
+        --border: #dce2e7;
+        --primary: #2563eb;
+        --primary-dark: #1d4ed8;
+        --success: #16803c;
+        --warning: #b7791f;
+        --danger: #c53030;
+        --sidebar: #111827;
+        --sidebar-hover: #1f2937;
+        --sidebar-text: #e5e7eb;
+        --shadow: 0 4px 16px rgba(0,0,0,0.06);
+        --radius: 12px;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+        font: inherit;
+    }
+
+    button {
+        cursor: pointer;
+    }
+
+    .app {
+        min-height: 100vh;
+        display: flex;
+    }
+
+    /* SIDEBAR */
+
+    .sidebar {
+        width: 245px;
+        background: var(--sidebar);
+        color: white;
+        padding: 20px 14px;
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        overflow-y: auto;
+        z-index: 20;
+    }
+
+    .brand {
+        padding: 8px 10px 22px;
+    }
+
+    .brand h1 {
+        font-size: 20px;
+        margin: 0 0 5px;
+    }
+
+    .brand p {
+        font-size: 12px;
+        color: #9ca3af;
+        margin: 0;
+        line-height: 1.4;
+    }
+
+    .nav {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .nav button {
+        border: 0;
+        background: transparent;
+        color: var(--sidebar-text);
+        text-align: left;
+        padding: 11px 12px;
+        border-radius: 8px;
+        transition: 0.15s;
+    }
+
+    .nav button:hover {
+        background: var(--sidebar-hover);
+    }
+
+    .nav button.active {
+        background: #2563eb;
+        color: white;
+    }
+
+    /* MAIN */
+
+    .main {
+        margin-left: 245px;
+        width: calc(100% - 245px);
+        min-height: 100vh;
+    }
+
+    .topbar {
+        background: white;
+        border-bottom: 1px solid var(--border);
+        padding: 16px 25px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .topbar h2 {
+        margin: 0;
+        font-size: 21px;
+    }
+
+    .storage-status {
+        font-size: 12px;
+        color: var(--muted);
+    }
+
+    .content {
+        padding: 25px;
+        max-width: 1400px;
+        margin: auto;
+    }
+
+    /* GENERAL */
+
+    .page {
+        display: none;
+    }
+
+    .page.active {
+        display: block;
+    }
+
+    .grid {
+        display: grid;
+        gap: 18px;
+    }
+
+    .grid-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .grid-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 20px;
+        box-shadow: var(--shadow);
+    }
+
+    .card h3 {
+        margin-top: 0;
+    }
+
+    .muted {
+        color: var(--muted);
+    }
+
+    .small {
+        font-size: 13px;
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    /* BUTTONS */
+
+    .btn {
+        border: 1px solid var(--border);
+        background: white;
+        color: var(--text);
+        padding: 9px 14px;
+        border-radius: 8px;
+        font-weight: 600;
+    }
+
+    .btn:hover {
+        background: #f3f4f6;
+    }
+
+    .btn-primary {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: var(--primary-dark);
+    }
+
+    .btn-success {
+        background: var(--success);
+        border-color: var(--success);
+        color: white;
+    }
+
+    .btn-warning {
+        background: var(--warning);
+        border-color: var(--warning);
+        color: white;
+    }
+
+    .btn-danger {
+        background: var(--danger);
+        border-color: var(--danger);
+        color: white;
+    }
+
+    .btn-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
+        margin-top: 15px;
+    }
+
+    /* STATS */
+
+    .stat {
+        padding: 20px;
+    }
+
+    .stat-number {
+        font-size: 32px;
+        font-weight: 700;
+        margin: 5px 0;
+    }
+
+    .stat-label {
+        color: var(--muted);
+        font-size: 13px;
+    }
+
+    /* FORMS */
+
+    label {
+        display: block;
+        font-size: 13px;
+        font-weight: 700;
+        margin-bottom: 6px;
+    }
+
+    input[type="text"],
+    input[type="search"],
+    input[type="date"],
+    select,
+    textarea {
+        width: 100%;
+        border: 1px solid #cfd6dc;
+        border-radius: 8px;
+        padding: 10px 11px;
+        background: white;
+        color: var(--text);
+    }
+
+    textarea {
+        min-height: 110px;
+        resize: vertical;
+    }
+
+    .form-group {
+        margin-bottom: 17px;
+    }
+
+    /* INTERVIEW */
+
+    .progress {
+        height: 8px;
+        background: #e5e7eb;
+        border-radius: 99px;
+        overflow: hidden;
+        margin: 12px 0 22px;
+    }
+
+    .progress-bar {
+        height: 100%;
+        background: var(--primary);
+        transition: width 0.2s;
+    }
+
+    .question-number {
+        color: var(--primary);
+        font-weight: 700;
+        font-size: 13px;
+        margin-bottom: 8px;
+    }
+
+    .question-text {
+        font-size: 22px;
+        font-weight: 700;
+        line-height: 1.35;
+        margin-bottom: 18px;
+    }
+
+    .question-help {
+        background: #eff6ff;
+        border-left: 4px solid var(--primary);
+        padding: 12px 14px;
+        border-radius: 6px;
+        margin-bottom: 16px;
+        color: #374151;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    /* RATINGS */
+
+    .rating-row {
+        border-bottom: 1px solid var(--border);
+        padding: 15px 0;
+    }
+
+    .rating-row:last-child {
+        border-bottom: 0;
+    }
+
+    .rating-title {
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+    .rating-description {
+        color: var(--muted);
+        font-size: 12px;
+        margin-bottom: 9px;
+    }
+
+    .rating-buttons {
+        display: flex;
+        gap: 7px;
+        flex-wrap: wrap;
+    }
+
+    .rating-button {
+        width: 42px;
+        height: 38px;
+        border-radius: 7px;
+        border: 1px solid #ccd3d9;
+        background: white;
+        font-weight: 700;
+    }
+
+    .rating-button.selected {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+    }
+
+    /* CHECKBOXES */
+
+    .checkbox-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 9px;
+    }
+
+    .check-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 9px;
+        padding: 10px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: #fafbfc;
+        font-size: 13px;
+        line-height: 1.4;
+        cursor: pointer;
+    }
+
+    .check-item:hover {
+        background: #f4f6f8;
+    }
+
+    .check-item input {
+        margin-top: 2px;
+        flex-shrink: 0;
+    }
+
+    .info-box {
+        padding: 13px 15px;
+        border-radius: 8px;
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        color: #166534;
+        font-size: 13px;
+        line-height: 1.5;
+        margin-bottom: 15px;
+    }
+
+    .warning-box {
+        padding: 13px 15px;
+        border-radius: 8px;
+        background: #fffbeb;
+        border: 1px solid #fde68a;
+        color: #92400e;
+        font-size: 13px;
+        line-height: 1.5;
+        margin-bottom: 15px;
+    }
+
+    .danger-box {
+        padding: 13px 15px;
+        border-radius: 8px;
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        color: #991b1b;
+        font-size: 13px;
+        line-height: 1.5;
+        margin-bottom: 15px;
+    }
+
+    /* APPLICANTS */
+
+    .toolbar {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 18px;
+    }
+
+    .toolbar > * {
+        flex: 1;
+        min-width: 180px;
+    }
+
+    .applicant-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .applicant-row {
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+        align-items: center;
+    }
+
+    .applicant-name {
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+    .applicant-meta {
+        color: var(--muted);
+        font-size: 12px;
+        margin-top: 4px;
+    }
+
+    .score {
+        font-weight: 700;
+        font-size: 17px;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 700;
+        background: #eef2ff;
+        color: #3730a3;
+    }
+
+    .badge-warning {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .badge-success {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    /* GUIDE */
+
+    .guide-section {
+        margin-bottom: 28px;
+    }
+
+    .guide-section h3 {
+        margin-bottom: 8px;
+    }
+
+    .guide-section p,
+    .guide-section li {
+        line-height: 1.6;
+        color: #374151;
+        font-size: 14px;
+    }
+
+    .guide-section ul {
+        padding-left: 22px;
+    }
+
+    .rating-guide {
+        display: grid;
+        grid-template-columns: 70px 1fr;
+        gap: 0;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .rating-guide > div {
+        padding: 11px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .rating-guide > div:nth-last-child(-n+2) {
+        border-bottom: 0;
+    }
+
+    .rating-num {
+        font-weight: 700;
+        text-align: center;
+        background: #f9fafb;
+    }
+
+    /* DATA */
+
+    .file-drop {
+        border: 2px dashed #cbd5e1;
+        border-radius: 10px;
+        padding: 28px;
+        text-align: center;
+        background: #f8fafc;
+        transition: 0.15s;
+    }
+
+    .file-drop:hover {
+        border-color: var(--primary);
+        background: #eff6ff;
+    }
+
+    .file-drop input {
+        margin-top: 12px;
+    }
+
+    .merge-summary {
+        margin-top: 18px;
+    }
+
+    .merge-stat {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 12px;
+        background: white;
+    }
+
+    .merge-stat strong {
+        display: block;
+        font-size: 20px;
+    }
+
+    /* MODAL */
+
+    .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.45);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        z-index: 100;
+    }
+
+    .modal {
+        width: min(700px, 100%);
+        max-height: 90vh;
+        overflow-y: auto;
+        background: white;
+        border-radius: 12px;
+        padding: 22px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+
+    /* MOBILE */
+
+    .mobile-nav {
+        display: none;
+    }
+
+    @media (max-width: 850px) {
+        .sidebar {
+            display: none;
+        }
+
+        .main {
+            margin-left: 0;
+            width: 100%;
+        }
+
+        .mobile-nav {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding: 8px;
+            background: var(--sidebar);
+        }
+
+        .mobile-nav button {
+            white-space: nowrap;
+            border: 0;
+            background: #1f2937;
+            color: white;
+            border-radius: 7px;
+            padding: 8px 10px;
+        }
+
+        .grid-2,
+        .grid-3,
+        .checkbox-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .content {
+            padding: 15px;
+        }
+
+        .applicant-row {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .question-text {
+            font-size: 19px;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="brand">
+            <h1>Science Olympiad</h1>
+            <p>Interview HQ</p>
+        </div>
+
+        <nav class="nav">
+            <button class="nav-btn active" data-page="dashboard">Dashboard</button>
+            <button class="nav-btn" data-page="interview">New Interview</button>
+            <button class="nav-btn" data-page="applicants">Applicants</button>
+            <button class="nav-btn" data-page="guide">Beginner's Guide</button>
+            <button class="nav-btn" data-page="data">Backup & Data</button>
+        </nav>
+    </aside>
+
+    <main class="main">
+
+        <!-- MOBILE NAV -->
+        <div class="mobile-nav">
+            <button onclick="showPage('dashboard')">Dashboard</button>
+            <button onclick="showPage('interview')">New Interview</button>
+            <button onclick="showPage('applicants')">Applicants</button>
+            <button onclick="showPage('guide')">Guide</button>
+            <button onclick="showPage('data')">Data</button>
+        </div>
+
+        <header class="topbar">
+            <h2 id="pageTitle">Dashboard</h2>
+            <div class="storage-status" id="storageStatus">
+                Checking storage...
+            </div>
+        </header>
+
+        <div class="content">
+
+            <!-- ================= DASHBOARD ================= -->
+
+            <section id="page-dashboard" class="page active">
+
+                <div class="grid grid-3">
+
+                    <div class="card stat">
+                        <div class="stat-label">Total Applicants</div>
+                        <div class="stat-number" id="statTotal">0</div>
+                    </div>
+
+                    <div class="card stat">
+                        <div class="stat-label">Completed Interviews</div>
+                        <div class="stat-number" id="statCompleted">0</div>
+                    </div>
+
+                    <div class="card stat">
+                        <div class="stat-label">Average Score</div>
+                        <div class="stat-number" id="statAverage">—</div>
+                    </div>
+
+                </div>
+
+                <div class="grid grid-2" style="margin-top:18px;">
+
+                    <div class="card">
+                        <h3>Welcome</h3>
+
+                        <p>
+                            Use this app to keep Science Olympiad applicant
+                            interviews organized in one place.
+                        </p>
+
+                        <p class="muted small">
+                            Each interview is saved in this browser. Use
+                            <strong>Backup & Data</strong> to create backups
+                            and combine backups from multiple interviewers.
+                        </p>
+
+                        <div class="btn-row">
+                            <button class="btn btn-primary"
+                                    onclick="showPage('interview')">
+                                Start New Interview
+                            </button>
+
+                            <button class="btn"
+                                    onclick="showPage('data')">
+                                Manage Backups
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Quick reminders</h3>
+
+                        <ul class="small" style="line-height:1.7;">
+                            <li>Rate evidence, not personality.</li>
+                            <li>Nervousness is not automatically a negative.</li>
+                            <li>Use observations as context, not as a score.</li>
+                            <li>Write specific notes when possible.</li>
+                            <li>Back up your data regularly.</li>
+                        </ul>
+                    </div>
+
+                </div>
+
+                <div class="card" style="margin-top:18px;">
+                    <h3>Recently updated</h3>
+                    <div id="recentApplicants">
+                        <p class="muted">No applicants yet.</p>
+                    </div>
+                </div>
+
+            </section>
+
+
+            <!-- ================= INTERVIEW ================= -->
+
+            <section id="page-interview" class="page">
+
+                <div id="interviewStart">
+
+                    <div class="card">
+
+                        <h3>Start a New Interview</h3>
+
+                        <p class="muted">
+                            Enter the applicant's information before beginning.
+                        </p>
+
+                        <div class="grid grid-2">
+
+                            <div class="form-group">
+                                <label for="newName">Applicant name</label>
+                                <input id="newName"
+                                       type="text"
+                                       placeholder="e.g. Alex Smith">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="newGrade">Grade</label>
+                                <select id="newGrade">
+                                    <option value="">Select grade</option>
+                                    <option>7</option>
+                                    <option>8</option>
+                                    <option>9</option>
+                                    <option>10</option>
+                                    <option>11</option>
+                                    <option>12</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newDate">Interview date</label>
+                            <input id="newDate" type="date">
+                        </div>
+
+                        <div class="info-box">
+                            Tip: The interview questions are intentionally
+                            open-ended. Follow up when an answer gives you
+                            useful evidence about curiosity, problem solving,
+                            teamwork, creativity, or motivation.
+                        </div>
+
+                        <button class="btn btn-primary"
+                                onclick="startInterview()">
+                            Begin Interview
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div id="interviewWizard" class="hidden">
+
+                    <div class="card">
+
+                        <div class="question-number" id="questionNumber">
+                            Question 1 of 5
+                        </div>
+
+                        <div class="progress">
+                            <div class="progress-bar"
+                                 id="questionProgress"
+                                 style="width:20%;">
+                            </div>
+                        </div>
+
+                        <div class="question-text" id="questionText"></div>
+
+                        <div class="question-help" id="questionHelp"></div>
+
+                        <textarea id="answerText"
+                                  placeholder="Write the applicant's answer or important points..."></textarea>
+
+                        <div class="btn-row">
+                            <button class="btn"
+                                    id="previousQuestionBtn"
+                                    onclick="previousQuestion()">
+                                Previous
+                            </button>
+
+                            <button class="btn btn-primary"
+                                    id="nextQuestionBtn"
+                                    onclick="nextQuestion()">
+                                Next
+                            </button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div id="interviewRatings" class="hidden">
+
+                    <div class="card">
+
+                        <h3>Rate the Interview</h3>
+
+                        <p class="muted small">
+                            Use the evidence from the applicant's answers.
+                            A 3 is a perfectly reasonable middle score.
+                        </p>
+
+                        <div id="ratingsContainer"></div>
+
+                        <div class="btn-row">
+                            <button class="btn"
+                                    onclick="backToQuestions()">
+                                Back to Questions
+                            </button>
+
+                            <button class="btn btn-primary"
+                                    onclick="goToObservations()">
+                                Continue
+                            </button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div id="interviewObservations" class="hidden">
+
+                    <div class="card">
+
+                        <h3>Interview Observations</h3>
+
+                        <div class="warning-box">
+                            <strong>Important:</strong>
+                            These checkboxes are for interview context only.
+                            They are not automatic positive or negative
+                            indicators and should not be used to judge
+                            someone's personality, disability, culture,
+                            anxiety level, or appearance.
+                        </div>
+
+                        <h4>Communication & engagement</h4>
+
+                        <div class="checkbox-grid">
+
+                            <label class="check-item">
+                                <input type="checkbox"
+                                       value="Listened before responding"
+                                       data-observation>
+                                <span>Listened before responding</span>
+                            </label>
+
+                            <label class="check-item">
+                                <input type="checkbox"
+                                       value="Appeared engaged with the conversation"
+                                       data-observation>
+                                <span>Appeared engaged with the conversation</span>
+                            </label>
+
+                            <label class="check-item">
+                                <input type="checkbox"
+                                       value="Gave thoughtful answers"
+                                       data-observation>
+                                <span>Gave thoughtful answers</span>
+                            </label>
+
+                            <label class="check-item">
+                                <input type="checkbox"
+                                       value="Explained ideas clearly enough to follow"
+                                       data-observation>
+                                <span>Explained ideas clearly enough to follow</span>
+                            </label>
+
+                            <label class="check-item">
+                                <input type="checkbox"
+                                       value="Asked for clarification when needed"
+                                       data-observation>
+                                <span>Asked for clarification when needed</span>
+                            </label>
+
+                            <label class="check-item">
+                                <input type="checkbox"
+                                       value="Asked a thoughtful follow-up question"
+                                       data-observation>
+                                <span>Asked a thoughtful follow-up question</span>
+                            </label>
+
+                        </div>
+
+
+                        <h4 style="margin-top:22px;">
+                            Problem solving & thinking
+                        </h4>
+
+                        <div class="checkbox-grid">
+
+                            <label class="check-item">
+                                <input type="checkbox"
+                                       value="Explained their reasoning"
+                                       data-observation>
+                                <span>Explained their reasoning</span>
+                            </label>
+
+                            <label class="check-item">
+                                <input type="checkbox"
+                                       value="Worked through a difficult question"
+                                       data-observation>
+                                <span>Worked through a difficult question</span>
+                            </label>
+
+                            <label class="check-item">
+                                <input type="checkbox"
+                                       value="Considered multiple possibilities"
+                                       data-observation>
+                                <span>Considered multiple possibilities</span>
+                            </label>
+
+                            <label class="check-item">
+                                <input type="checkbox"
+                                       value="Showed curiosity"
+                                       data-observation>
+                                <span>Showed curiosity</span>
+                            </label>
+
+                            <label class="check-item">
+                                <input type="checkbox"
+                                       value="Learned from or reflected on mistakes"
+                                       data-observation>
+                                <span>Learned from or reflected on mistakes</span>
+                            </label>
+
+                            <label class="check-item">
+                                <input type="checkbox"
+                                       value="Provided specific examples"
+                                       data-observation>
+                                <span>Provided specific examples</span>
+                            </label>
+
+                        </div>
+
+
+                        <h4 style="margin-top:22px;">
+                            Team interaction
+                        </h4>
+
+                        <div class="checkbox-grid">
+
+                            <label class="check-item">
+                                <input type="checkbox"
+                                       value="Discussed teamwork constructively"
+                                       data-observation>
+                                <span>Discussed teamwork constructively</span>
+                            </label>
+
+                            <label class="check-item">
+                                <input type="checkbox"
+                                       value="Recognized contributions from others"
+                                       data-observation>
+                                <span>Recognized contributions from others</span>
+                            </label>
+
+                            <label class="check-item">
+                                <input type="checkbox"
+                                       value="Showed willingness to learn from teammates"
+                                       data-observation>
+                                <span>Showed willingness to learn from teammates</span>
+                            </label>
+
+                            <label class="check-item">
+                                <input type="checkbox"
+                                       value="Discussed handling disagreement constructively"
+                                       data-observation>
+                                <span>Discussed handling disagreement constructively</span>
+                            </label>
+
+                        </div>
+
+
+                        <h4 style="margin-top:22px;">
+                            Optional contextual observations
+                        </h4>
+
+                        <div class="checkbox-grid">
+
+                            <label class="check-item">
+                                <input type="checkbox"
+                                       value="Seemed nervous at some point"
+                                       data-observation>
+                                <span>Seemed nervous at some point</span>
+                            </label>
+
+                            <label class="check-item">
+                                <input type="checkbox"
+                                       value="Became more comfortable as interview continued"
+                                       data-observation>
+                                <span>Became more comfortable as interview continued</span>
+                            </label>
+
+                            <label class="check-item">
+                                <input type="checkbox"
+                                       value="Showed enthusiasm when discussing an interest"
+                                       data-observation>
+                                <span>Showed enthusiasm when discussing an interest</span>
+                            </label>
+
+                            <label class="check-item">
+                                <input type="checkbox"
+                                       value="Used notes or took a moment to think"
+                                       data-observation>
+                                <span>Used notes or took a moment to think</span>
+                            </label>
+
+                        </div>
+
+
+                        <div class="warning-box" style="margin-top:18px;">
+                            Eye contact, posture, fidgeting, facial expressions,
+                            speaking speed, and similar behaviors can vary because
+                            of culture, personality, anxiety, disability, or simply
+                            the situation. Do not treat them as measures of
+                            intelligence, honesty, effort, or team worth.
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="interviewNotes">
+                                Overall interviewer notes
+                            </label>
+
+                            <textarea id="interviewNotes"
+                                      placeholder="Specific evidence, memorable answers, concerns, strengths, or follow-up notes..."></textarea>
+                        </div>
+
+                        <div class="btn-row">
+                            <button class="btn"
+                                    onclick="backToRatings()">
+                                Back
+                            </button>
+
+                            <button class="btn btn-success"
+                                    onclick="finishInterview()">
+                                Save Interview
+                            </button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div id="interviewComplete" class="hidden">
+
+                    <div class="card">
+
+                        <h3>Interview Saved</h3>
+
+                        <div class="info-box">
+                            The interview has been saved to this browser.
+                            Remember to back up your data regularly.
+                        </div>
+
+                        <div id="completionSummary"></div>
+
+                        <div class="btn-row">
+                            <button class="btn btn-primary"
+                                    onclick="resetInterview()">
+                                Start Another Interview
+                            </button>
+
+                            <button class="btn"
+                                    onclick="showPage('applicants')">
+                                View Applicants
+                            </button>
+
+                            <button class="btn"
+                                    onclick="showPage('data')">
+                                Back Up Data
+                            </button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= APPLICANTS ================= -->
+
+            <section id="page-applicants" class="page">
+
+                <div class="card">
+
+                    <h3>Applicants</h3>
+
+                    <div class="toolbar">
+
+                        <input id="applicantSearch"
+                               type="search"
+                               placeholder="Search by name..."
+                               oninput="renderApplicants()">
+
+                        <select id="applicantStatus"
+                                onchange="renderApplicants()">
+                            <option value="all">All applicants</option>
+                            <option value="completed">Completed</option>
+                            <option value="incomplete">Incomplete</option>
+                        </select>
+
+                        <select id="applicantSort"
+                                onchange="renderApplicants()">
+                            <option value="updated">Recently updated</option>
+                            <option value="name">Name</option>
+                            <option value="scoreHigh">Score: high to low</option>
+                            <option value="scoreLow">Score: low to high</option>
+                        </select>
+
+                    </div>
+
+                    <div id="applicantList"
+                         class="applicant-list">
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= GUIDE ================= -->
+
+            <section id="page-guide" class="page">
+
+                <div class="card">
+
+                    <h2>Beginner's Guide to Interviewing</h2>
+
+                    <p class="muted">
+                        This guide is designed to help interviewers conduct
+                        consistent, fair, useful Science Olympiad interviews.
+                    </p>
+
+
+                    <div class="guide-section">
+
+                        <h3>1. Before the interview</h3>
+
+                        <ul>
+                            <li>Read the applicant's name and grade before starting.</li>
+                            <li>Know the questions ahead of time.</li>
+                            <li>Try to give each applicant approximately the same amount of time.</li>
+                            <li>Use the same core questions for everyone.</li>
+                            <li>Have follow-up questions ready, but do not turn them into a different interview for every person.</li>
+                            <li>Focus on evidence rather than your first impression.</li>
+                        </ul>
+
+                    </div>
+
+
+                    <div class="guide-section">
+
+                        <h3>2. Start comfortably</h3>
+
+                        <p>
+                            Interviews can be stressful, especially for students
+                            who have never done one before. A nervous applicant
+                            may need a minute to settle in.
+                        </p>
+
+                        <ul>
+                            <li>Introduce yourself.</li>
+                            <li>Explain roughly how the interview will work.</li>
+                            <li>Make sure the applicant understands that they can take a moment to think.</li>
+                            <li>Do not intentionally make the applicant uncomfortable.</li>
+                        </ul>
+
+                    </div>
+
+
+                    <div class="guide-section">
+
+                        <h3>3. Use follow-up questions</h3>
+
+                        <p>
+                            A good follow-up asks the applicant to explain
+                            something they already mentioned.
+                        </p>
+
+                        <p><strong>Good examples:</strong></p>
+
+                        <ul>
+                            <li>"What happened next?"</li>
+                            <li>"What did you learn from that?"</li>
+                            <li>"Why did you choose that approach?"</li>
+                            <li>"Can you give me an example?"</li>
+                            <li>"What would you do differently next time?"</li>
+                        </ul>
+
+                        <p>
+                            Avoid follow-ups that effectively give one applicant
+                            an advantage over another by coaching them toward
+                            the answer you want.
+                        </p>
+
+                    </div>
+
+
+                    <div class="guide-section">
+
+                        <h3>4. What to look for</h3>
+
+                        <p>
+                            Strong interviews do not necessarily come from students
+                            who already know the most Science Olympiad facts.
+                            Look for evidence of qualities that can contribute
+                            to a team.
+                        </p>
+
+                        <ul>
+                            <li><strong>Interest:</strong> Does the applicant actually want to participate?</li>
+                            <li><strong>Curiosity:</strong> Do they enjoy learning or exploring things?</li>
+                            <li><strong>Problem solving:</strong> Can they describe how they handle setbacks?</li>
+                            <li><strong>Creativity:</strong> Can they approach ideas from different angles?</li>
+                            <li><strong>Team fit:</strong> Do they understand that Science Olympiad is collaborative?</li>
+                            <li><strong>Communication:</strong> Can they explain their thinking?</li>
+                        </ul>
+
+                    </div>
+
+
+                    <div class="guide-section">
+
+                        <h3>5. Rating scale</h3>
+
+                        <div class="rating-guide">
+
+                            <div class="rating-num">1</div>
+                            <div>
+                                <strong>Very weak evidence</strong><br>
+                                The interview provides little evidence of the quality.
+                            </div>
+
+                            <div class="rating-num">2</div>
+                            <div>
+                                <strong>Below average evidence</strong><br>
+                                Some evidence exists, but there are meaningful weaknesses.
+                            </div>
+
+                            <div class="rating-num">3</div>
+                            <div>
+                                <strong>Solid / average evidence</strong><br>
+                                The applicant demonstrates the quality adequately.
+                            </div>
+
+                            <div class="rating-num">4</div>
+                            <div>
+                                <strong>Strong evidence</strong><br>
+                                The applicant provides several convincing examples.
+                            </div>
+
+                            <div class="rating-num">5</div>
+                            <div>
+                                <strong>Exceptional evidence</strong><br>
+                                The applicant gives unusually strong, specific, or insightful evidence.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="guide-section">
+
+                        <h3>6. Do not confuse nervousness with weakness</h3>
+
+                        <p>
+                            A student may speak quietly, pause before answering,
+                            fidget, forget a word, or appear uncomfortable.
+                            None of those things automatically means the student
+                            lacks curiosity, intelligence, teamwork ability, or
+                            motivation.
+                        </p>
+
+                        <p>
+                            Look at the substance of the applicant's answer.
+                            If the applicant gives a thoughtful answer after
+                            taking a moment to think, that is still thoughtful
+                            reasoning.
+                        </p>
+
+                    </div>
+
+
+                    <div class="guide-section">
+
+                        <h3>7. Body language and interview observations</h3>
+
+                        <div class="warning-box">
+                            Body language should never become a hidden personality
+                            test. Eye contact, posture, facial expression,
+                            movement, speaking speed, and other behaviors vary
+                            widely between individuals.
+                        </div>
+
+                        <p>
+                            The observation checkboxes in this application are
+                            primarily intended to help interviewers remember
+                            concrete things that happened during the interview.
+                            They should not automatically increase or decrease
+                            an applicant's score.
+                        </p>
+
+                        <p>
+                            Whenever possible, record <strong>observable evidence</strong>
+                            rather than interpretations.
+                        </p>
+
+                        <p>
+                            For example:
+                        </p>
+
+                        <ul>
+                            <li>Better: "Asked how the team handles disagreements."</li>
+                            <li>Less useful: "Seems like a natural leader."</li>
+                        </ul>
+
+                    </div>
+
+
+                    <div class="guide-section">
+
+                        <h3>8. Red flags vs. ordinary nervousness</h3>
+
+                        <p>
+                            One awkward answer should not determine an applicant's
+                            entire evaluation.
+                        </p>
+
+                        <p>
+                            If something concerns you, look for a pattern or
+                            specific evidence rather than relying on intuition.
+                        </p>
+
+                        <ul>
+                            <li>Was the issue actually relevant to team participation?</li>
+                            <li>Did the applicant explain the situation?</li>
+                            <li>Did they demonstrate reflection or willingness to improve?</li>
+                            <li>Would you judge the same behavior the same way in another applicant?</li>
+                        </ul>
+
+                    </div>
+
+
+                    <div class="guide-section">
+
+                        <h3>9. Avoid bias</h3>
+
+                        <ul>
+                            <li>Do not favor students because they remind you of yourself.</li>
+                            <li>Do not assume previous Science Olympiad experience automatically means someone is a better applicant.</li>
+                            <li>Do not reward confidence alone.</li>
+                            <li>Do not penalize shyness alone.</li>
+                            <li>Do not make decisions based on appearance.</li>
+                            <li>Do not use stereotypes about grade level, personality, or background.</li>
+                            <li>Use the same standards for every applicant.</li>
+                        </ul>
+
+                    </div>
+
+
+                    <div class="guide-section">
+
+                        <h3>10. Write useful notes</h3>
+
+                        <p>
+                            Good notes help the team remember why a score was
+                            given later.
+                        </p>
+
+                        <p>
+                            Instead of:
+                        </p>
+
+                        <p>
+                            <em>"Really smart."</em>
+                        </p>
+
+                        <p>
+                            Try:
+                        </p>
+
+                        <p>
+                            <em>
+                                "Explained how they changed their approach after
+                                their first experiment failed and identified
+                                what they would test differently."
+                            </em>
+                        </p>
+
+                    </div>
+
+
+                    <div class="guide-section">
+
+                        <h3>11. After the interview</h3>
+
+                        <ul>
+                            <li>Finish your ratings while the interview is fresh.</li>
+                            <li>Write down important evidence.</li>
+                            <li>Avoid changing scores simply because another interviewer liked or disliked someone.</li>
+                            <li>When comparing applicants, compare the evidence and criteria—not just overall impressions.</li>
+                            <li>Back up the database regularly.</li>
+                        </ul>
+
+                    </div>
+
+
+                    <div class="guide-section">
+
+                        <h3>12. The most important rule</h3>
+
+                        <div class="info-box">
+                            <strong>Evaluate what the applicant demonstrates,
+                            not what you assume about the applicant.</strong>
+                            <br><br>
+                            The goal of an interview is to gather useful evidence,
+                            not to find the person who is the most charismatic
+                            for ten minutes.
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= DATA ================= -->
+
+            <section id="page-data" class="page">
+
+                <div class="grid grid-2">
+
+                    <!-- MERGE -->
+                    <div class="card">
+
+                        <h3>Import & Merge Backups</h3>
+
+                        <p>
+                            This is the feature to use when multiple interviewers
+                            have completed interviews on their own devices.
+                        </p>
+
+                        <div class="info-box">
+                            Select <strong>multiple JSON files</strong> at once.
+                            The app will read all of them and add their applicants
+                            to your current master list.
+                        </div>
+
+                        <div class="file-drop">
+
+                            <strong>
+                                Select backup JSON files
+                            </strong>
+
+                            <p class="muted small">
+                                You can select one file or many files.
+                            </p>
+
+                            <input id="mergeFiles"
+                                   type="file"
+                                   multiple
+                                   accept=".json,application/json">
+
+                        </div>
+
+                        <div class="btn-row">
+                            <button class="btn btn-primary"
+                                    onclick="mergeSelectedFiles()">
+                                Import & Merge
+                            </button>
+                        </div>
+
+                        <div id="mergeSummary"
+                             class="merge-summary hidden">
+                        </div>
+
+                    </div>
+
+
+                    <!-- EXPORT -->
+                    <div class="card">
+
+                        <h3>Master Backup</h3>
+
+                        <p>
+                            Download everything currently stored in this
+                            browser as one JSON backup.
+                        </p>
+
+                        <div class="info-box">
+                            If you have merged your friends' backups,
+                            this file becomes your combined master backup.
+                        </div>
+
+                        <button class="btn btn-success"
+                                onclick="downloadJSONBackup()">
+                            Download Master JSON Backup
+                        </button>
+
+                    </div>
+
+
+                    <!-- RESTORE -->
+                    <div class="card">
+
+                        <h3>Restore / Replace All Data</h3>
+
+                        <div class="danger-box">
+                            <strong>Advanced option:</strong>
+                            restoring a backup this way replaces all current
+                            applicant records in this browser.
+                        </div>
+
+                        <input id="replaceFile"
+                               type="file"
+                               accept=".json,application/json">
+
+                        <div class="btn-row">
+                            <button class="btn btn-danger"
+                                    onclick="replaceWithSelectedFile()">
+                                Restore & Replace Everything
+                            </button>
+                        </div>
+
+                    </div>
+
+
+                    <!-- STORAGE -->
+                    <div class="card">
+
+                        <h3>Storage Information</h3>
+
+                        <p id="storageInfo"
+                           class="small muted">
+                            Loading...
+                        </p>
+
+                        <div class="btn-row">
+
+                            <button class="btn"
+                                    onclick="refreshDataPage()">
+                                Refresh
+                            </button>
+
+                            <button class="btn btn-danger"
+                                    onclick="deleteAllData()">
+                                Delete All Local Data
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+    </main>
+</div>
+
+
+<!-- APPLICANT DETAIL MODAL -->
+
+<div id="applicantModal"
+     class="modal-backdrop hidden">
+
+    <div class="modal">
+
+        <div style="display:flex;justify-content:space-between;gap:15px;">
+            <div>
+                <h2 id="modalApplicantName"
+                    style="margin-top:0;">
+                </h2>
+
+                <div id="modalApplicantMeta"
+                     class="muted small">
+                </div>
+            </div>
+
+            <button class="btn"
+                    onclick="closeApplicantModal()">
+                Close
+            </button>
+        </div>
+
+        <div id="modalApplicantContent"></div>
+
+    </div>
+</div>
+
+
+<script>
+/* ============================================================
+   SCIENCE OLYMPIAD INTERVIEW HQ
+   Single-file application
+   ============================================================ */
+
+
+/* ============================================================
+   QUESTIONS
+   ============================================================ */
+
+const QUESTIONS = [
+    {
+        text: "What made you want to join Science Olympiad?",
+        help: "Look for genuine motivation and whether the applicant can explain what interests them."
+    },
+    {
+        text: "What's something you're genuinely obsessed with outside of school?",
+        help: "Look for curiosity, enthusiasm, depth of interest, and the ability to explain why something matters to them."
+    },
+    {
+        text: "Tell me about a time something you worked on didn't go the way you planned. What did you do?",
+        help: "Look for problem solving, reflection, persistence, adaptability, and what the applicant learned."
+    },
+    {
+        text: "If you could add any event to Science Olympiad that doesn't exist, what would it be and why?",
+        help: "Look for creativity and the reasoning behind the idea rather than whether the idea itself is technically perfect."
+    },
+    {
+        text: "What would make this year's team different from last year in your opinion?",
+        help: "Look for teamwork awareness, ideas about improvement, and whether the applicant thinks beyond themselves."
+    }
+];
+
+
+/* ============================================================
+   RATINGS
+   ============================================================ */
+
+const RATING_CATEGORIES = [
+    {
+        key: "interest",
+        title: "Interest & motivation",
+        description: "How convincingly does the applicant demonstrate that they want to participate?"
+    },
+    {
+        key: "curiosity",
+        title: "Curiosity & passion",
+        description: "Does the applicant show genuine curiosity or enthusiasm about things they care about?"
+    },
+    {
+        key: "problemSolving",
+        title: "Problem solving",
+        description: "How well do they describe working through setbacks or difficult situations?"
+    },
+    {
+        key: "creativity",
+        title: "Creativity",
+        description: "Do they generate interesting ideas or approach problems from different angles?"
+    },
+    {
+        key: "teamFit",
+        title: "Team fit",
+        description: "Do they demonstrate behaviors that could contribute positively to a team?"
+    },
+    {
+        key: "communication",
+        title: "Communication",
+        description: "How effectively do they explain their thoughts and experiences?"
+    }
+];
+
+
+/* ============================================================
+   APP STATE
+   ============================================================ */
+
+let applicants = [];
+
+let currentInterview = null;
+
+let currentQuestion = 0;
+
+
+/* ============================================================
+   STORAGE
+   ============================================================ */
+
+const DB_NAME = "ScienceOlympiadInterviewHQ";
+const DB_VERSION = 1;
+const STORE_NAME = "applicants";
+
+let db = null;
+let usingIndexedDB = false;
+
+
+/* ============================================================
+   INITIALIZATION
+   ============================================================ */
+
+document.addEventListener("DOMContentLoaded", async () => {
+
+    setupNavigation();
+
+    document.getElementById("newDate").value =
+        new Date().toISOString().slice(0, 10);
+
+    await initializeStorage();
+
+    await loadApplicants();
+
+    renderDashboard();
+    renderApplicants();
+    refreshDataPage();
+
+});
+
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+
+function setupNavigation() {
+
+    document.querySelectorAll(".nav-btn").forEach(button => {
+
+        button.addEventListener("click", () => {
+
+            showPage(button.dataset.page);
+
+        });
+
+    });
+
+}
+
+
+function showPage(page) {
+
+    document.querySelectorAll(".page").forEach(element => {
+        element.classList.remove("active");
+    });
+
+    const target = document.getElementById("page-" + page);
+
+    if (target) {
+        target.classList.add("active");
+    }
+
+    document.querySelectorAll(".nav-btn").forEach(button => {
+        button.classList.toggle(
+            "active",
+            button.dataset.page === page
+        );
+    });
+
+    const titles = {
+        dashboard: "Dashboard",
+        interview: "New Interview",
+        applicants: "Applicants",
+        guide: "Beginner's Guide",
+        data: "Backup & Data"
+    };
+
+    document.getElementById("pageTitle").textContent =
+        titles[page] || "Science Olympiad Interview HQ";
+
+    if (page === "dashboard") {
+        renderDashboard();
+    }
+
+    if (page === "applicants") {
+        renderApplicants();
+    }
+
+    if (page === "data") {
+        refreshDataPage();
+    }
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+
+/* ============================================================
+   STORAGE INITIALIZATION
+   ============================================================ */
+
+async function initializeStorage() {
+
+    if (!window.indexedDB) {
+
+        usingIndexedDB = false;
+
+        updateStorageStatus();
+
+        return;
+
+    }
+
+    try {
+
+        db = await openDatabase();
+
+        usingIndexedDB = true;
+
+    } catch (error) {
+
+        console.warn("IndexedDB unavailable:", error);
+
+        usingIndexedDB = false;
+
+    }
+
+    updateStorageStatus();
+}
+
+
+function openDatabase() {
+
+    return new Promise((resolve, reject) => {
+
+        const request =
+            indexedDB.open(DB_NAME, DB_VERSION);
+
+        request.onupgradeneeded = event => {
+
+            const database = event.target.result;
+
+            if (!database.objectStoreNames.contains(STORE_NAME)) {
+
+                database.createObjectStore(
+                    STORE_NAME,
+                    { keyPath: "id" }
+                );
+
+            }
+
+        };
+
+        request.onsuccess = event => {
+            resolve(event.target.result);
+        };
+
+        request.onerror = () => {
+            reject(request.error);
+        };
+
+    });
+
+}
+
+
+function updateStorageStatus() {
+
+    const element =
+        document.getElementById("storageStatus");
+
+    if (usingIndexedDB) {
+        element.textContent =
+            "Local browser storage: IndexedDB";
+    } else {
+        element.textContent =
+            "Local browser storage: fallback";
+    }
+
+}
+
+
+/* ============================================================
+   LOAD
+   ============================================================ */
+
+async function loadApplicants() {
+
+    if (usingIndexedDB) {
+
+        try {
+
+            applicants = await idbGetAll();
+
+            return;
+
+        } catch (error) {
+
+            console.warn(error);
+
+        }
+
+    }
+
+    try {
+
+        const saved =
+            localStorage.getItem("scienceOlympiadApplicants");
+
+        applicants =
+            saved ? JSON.parse(saved) : [];
+
+    } catch (error) {
+
+        console.error(error);
+
+        applicants = [];
+
+    }
+
+}
+
+
+function idbGetAll() {
+
+    return new Promise((resolve, reject) => {
+
+        const transaction =
+            db.transaction(STORE_NAME, "readonly");
+
+        const store =
+            transaction.objectStore(STORE_NAME);
+
+        const request =
+            store.getAll();
+
+        request.onsuccess = () => {
+            resolve(request.result || []);
+        };
+
+        request.onerror = () => {
+            reject(request.error);
+        };
+
+    });
+
+}
+
+
+async function saveApplicant(applicant) {
+
+    if (usingIndexedDB) {
+
+        await new Promise((resolve, reject) => {
+
+            const transaction =
+                db.transaction(STORE_NAME, "readwrite");
+
+            transaction.objectStore(STORE_NAME)
+                .put(applicant);
+
+            transaction.oncomplete = resolve;
+            transaction.onerror = () =>
+                reject(transaction.error);
+
+        });
+
+    } else {
+
+        localStorage.setItem(
+            "scienceOlympiadApplicants",
+            JSON.stringify(applicants)
+        );
+
+    }
+
+}
+
+
+async function saveAllApplicants() {
+
+    if (usingIndexedDB) {
+
+        await new Promise((resolve, reject) => {
+
+            const transaction =
+                db.transaction(STORE_NAME, "readwrite");
+
+            const store =
+                transaction.objectStore(STORE_NAME);
+
+            store.clear();
+
+            applicants.forEach(applicant => {
+                store.put(applicant);
+            });
+
+            transaction.oncomplete = resolve;
+            transaction.onerror = () =>
+                reject(transaction.error);
+
+        });
+
+    } else {
+
+        localStorage.setItem(
+            "scienceOlympiadApplicants",
+            JSON.stringify(applicants)
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   INTERVIEW
+   ============================================================ */
+
+function startInterview() {
+
+    const name =
+        document.getElementById("newName").value.trim();
+
+    const grade =
+        document.getElementById("newGrade").value;
+
+    const date =
+        document.getElementById("newDate").value;
+
+    if (!name) {
+        alert("Please enter the applicant's name.");
+        return;
+    }
+
+    currentInterview = {
+
+        id: generateId(),
+
+        name,
+
+        grade,
+
+        interviewDate:
+            date || new Date().toISOString().slice(0, 10),
+
+        answers: QUESTIONS.map(() => ""),
+
+        ratings: {},
+
+        observations: [],
+
+        notes: "",
+
+        completed: false,
+
+        createdAt: new Date().toISOString(),
+
+        updatedAt: new Date().toISOString()
+
+    };
+
+    currentQuestion = 0;
+
+    document.getElementById("interviewStart")
+        .classList.add("hidden");
+
+    document.getElementById("interviewWizard")
+        .classList.remove("hidden");
+
+    document.getElementById("interviewRatings")
+        .classList.add("hidden");
+
+    document.getElementById("interviewObservations")
+        .classList.add("hidden");
+
+    document.getElementById("interviewComplete")
+        .classList.add("hidden");
+
+    renderQuestion();
+
+}
+
+
+function renderQuestion() {
+
+    const question =
+        QUESTIONS[currentQuestion];
+
+    document.getElementById("questionNumber")
+        .textContent =
+        `Question ${currentQuestion + 1} of ${QUESTIONS.length}`;
+
+    document.getElementById("questionProgress")
+        .style.width =
+        `${((currentQuestion + 1) / QUESTIONS.length) * 100}%`;
+
+    document.getElementById("questionText")
+        .textContent =
+        question.text;
+
+    document.getElementById("questionHelp")
+        .textContent =
+        question.help;
+
+    document.getElementById("answerText")
+        .value =
+        currentInterview.answers[currentQuestion] || "";
+
+    document.getElementById("previousQuestionBtn")
+        .disabled =
+        currentQuestion === 0;
+
+    document.getElementById("nextQuestionBtn")
+        .textContent =
+        currentQuestion === QUESTIONS.length - 1
+            ? "Continue to Ratings"
+            : "Next";
+
+}
+
+
+function saveCurrentAnswer() {
+
+    currentInterview.answers[currentQuestion] =
+        document.getElementById("answerText").value.trim();
+
+    currentInterview.updatedAt =
+        new Date().toISOString();
+
+}
+
+
+function nextQuestion() {
+
+    saveCurrentAnswer();
+
+    if (currentQuestion < QUESTIONS.length - 1) {
+
+        currentQuestion++;
+
+        renderQuestion();
+
+    } else {
+
+        document.getElementById("interviewWizard")
+            .classList.add("hidden");
+
+        document.getElementById("interviewRatings")
+            .classList.remove("hidden");
+
+        renderRatings();
+
+    }
+
+}
+
+
+function previousQuestion() {
+
+    saveCurrentAnswer();
+
+    if (currentQuestion > 0) {
+
+        currentQuestion--;
+
+        renderQuestion();
+
+    }
+
+}
+
+
+function backToQuestions() {
+
+    document.getElementById("interviewRatings")
+        .classList.add("hidden");
+
+    document.getElementById("interviewWizard")
+        .classList.remove("hidden");
+
+    renderQuestion();
+
+}
+
+
+/* ============================================================
+   RATINGS
+   ============================================================ */
+
+function renderRatings() {
+
+    const container =
+        document.getElementById("ratingsContainer");
+
+    container.innerHTML = "";
+
+    RATING_CATEGORIES.forEach(category => {
+
+        const row =
+            document.createElement("div");
+
+        row.className = "rating-row";
+
+        const currentValue =
+            currentInterview.ratings[category.key] || 0;
+
+        row.innerHTML = `
+
+            <div class="rating-title">
+                ${escapeHTML(category.title)}
+            </div>
+
+            <div class="rating-description">
+                ${escapeHTML(category.description)}
+            </div>
+
+            <div class="rating-buttons">
+
+                ${[1,2,3,4,5].map(number => `
+
+                    <button
+                        type="button"
+                        class="rating-button ${currentValue === number ? "selected" : ""}"
+                        onclick="setRating('${category.key}', ${number})">
+
+                        ${number}
+
+                    </button>
+
+                `).join("")}
+
+            </div>
+        `;
+
+        container.appendChild(row);
+
+    });
+
+}
+
+
+function setRating(key, value) {
+
+    currentInterview.ratings[key] = value;
+
+    renderRatings();
+
+}
+
+
+function calculateAverage(ratings) {
+
+    const values =
+        RATING_CATEGORIES
+            .map(category => Number(ratings?.[category.key]))
+            .filter(value => value > 0);
+
+    if (!values.length) {
+        return null;
+    }
+
+    return values.reduce((a,b) => a + b, 0) / values.length;
+
+}
+
+
+/* ============================================================
+   OBSERVATIONS
+   ============================================================ */
+
+function goToObservations() {
+
+    const missing =
+        RATING_CATEGORIES.filter(
+            category =>
+                !currentInterview.ratings[category.key]
+        );
+
+    if (missing.length) {
+
+        const names =
+            missing.map(category => category.title)
+                .join(", ");
+
+        const proceed =
+            confirm(
+                `You have not rated: ${names}.\n\n` +
+                `Do you want to continue anyway?`
+            );
+
+        if (!proceed) {
+            return;
+        }
+
+    }
+
+    document.getElementById("interviewRatings")
+        .classList.add("hidden");
+
+    document.getElementById("interviewObservations")
+        .classList.remove("hidden");
+
+}
+
+
+function collectObservations() {
+
+    return Array.from(
+        document.querySelectorAll(
+            "[data-observation]:checked"
+        )
+    ).map(input => input.value);
+
+}
+
+
+function backToRatings() {
+
+    document.getElementById("interviewObservations")
+        .classList.add("hidden");
+
+    document.getElementById("interviewRatings")
+        .classList.remove("hidden");
+
+}
+
+
+/* ============================================================
+   FINISH INTERVIEW
+   ============================================================ */
+
+async function finishInterview() {
+
+    currentInterview.observations =
+        collectObservations();
+
+    currentInterview.notes =
+        document.getElementById("interviewNotes")
+            .value.trim();
+
+    currentInterview.completed = true;
+
+    currentInterview.updatedAt =
+        new Date().toISOString();
+
+    const existingIndex =
+        applicants.findIndex(
+            applicant =>
+                applicant.id === currentInterview.id
+        );
+
+    if (existingIndex >= 0) {
+
+        applicants[existingIndex] =
+            currentInterview;
+
+    } else {
+
+        applicants.push(currentInterview);
+
+    }
+
+    await saveApplicant(currentInterview);
+
+    document.getElementById("interviewObservations")
+        .classList.add("hidden");
+
+    document.getElementById("interviewComplete")
+        .classList.remove("hidden");
+
+    const average =
+        calculateAverage(currentInterview.ratings);
+
+    document.getElementById("completionSummary")
+        .innerHTML = `
+
+            <div class="grid grid-2">
+
+                <div>
+                    <strong>Applicant</strong>
+                    <div class="muted">
+                        ${escapeHTML(currentInterview.name)}
+                    </div>
+                </div>
+
+                <div>
+                    <strong>Average rating</strong>
+                    <div class="muted">
+                        ${average !== null
+                            ? average.toFixed(2) + " / 5"
+                            : "Not rated"}
+                    </div>
+                </div>
+
+            </div>
+        `;
+
+    renderDashboard();
+
+}
+
+
+function resetInterview() {
+
+    currentInterview = null;
+
+    currentQuestion = 0;
+
+    document.getElementById("newName").value = "";
+    document.getElementById("newGrade").value = "";
+
+    document.getElementById("interviewComplete")
+        .classList.add("hidden");
+
+    document.getElementById("interviewStart")
+        .classList.remove("hidden");
+
+    document.querySelectorAll(
+        "[data-observation]"
+    ).forEach(input => {
+        input.checked = false;
+    });
+
+    document.getElementById("interviewNotes").value = "";
+
+    showPage("interview");
+
+}
+
+
+/* ============================================================
+   DASHBOARD
+   ============================================================ */
+
+function renderDashboard() {
+
+    const total =
+        applicants.length;
+
+    const completed =
+        applicants.filter(
+            applicant => applicant.completed
+        ).length;
+
+    const averages =
+        applicants
+            .filter(applicant => applicant.completed)
+            .map(applicant =>
+                calculateAverage(applicant.ratings)
+            )
+            .filter(value => value !== null);
+
+    const overall =
+        averages.length
+            ? averages.reduce((a,b) => a + b, 0) /
+              averages.length
+            : null;
+
+    document.getElementById("statTotal")
+        .textContent = total;
+
+    document.getElementById("statCompleted")
+        .textContent = completed;
+
+    document.getElementById("statAverage")
+        .textContent =
+        overall !== null
+            ? overall.toFixed(2)
+            : "—";
+
+    renderRecentApplicants();
+
+}
+
+
+function renderRecentApplicants() {
+
+    const container =
+        document.getElementById("recentApplicants");
+
+    const recent =
+        [...applicants]
+            .sort(
+                (a,b) =>
+                    new Date(b.updatedAt || 0) -
+                    new Date(a.updatedAt || 0)
+            )
+            .slice(0, 5);
+
+    if (!recent.length) {
+
+        container.innerHTML =
+            `<p class="muted">No applicants yet.</p>`;
+
+        return;
+
+    }
+
+    container.innerHTML =
+        recent.map(applicant => {
+
+            const average =
+                calculateAverage(applicant.ratings);
+
+            return `
+
+                <div class="applicant-row"
+                     onclick="openApplicant('${applicant.id}')"
+                     style="cursor:pointer;">
+
+                    <div>
+
+                        <div class="applicant-name">
+                            ${escapeHTML(applicant.name)}
+                        </div>
+
+                        <div class="applicant-meta">
+
+                            ${applicant.grade
+                                ? "Grade " +
+                                  escapeHTML(applicant.grade) +
+                                  " · "
+                                : ""}
+
+                            ${applicant.completed
+                                ? "Completed"
+                                : "Incomplete"}
+
+                        </div>
+
+                    </div>
+
+                    <div class="score">
+
+                        ${average !== null
+                            ? average.toFixed(2) + " / 5"
+                            : "—"}
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }).join("");
+
+}
+
+
+/* ============================================================
+   APPLICANTS
+   ============================================================ */
+
+function renderApplicants() {
+
+    const container =
+        document.getElementById("applicantList");
+
+    if (!container) {
+        return;
+    }
+
+    const search =
+        (
+            document.getElementById("applicantSearch")
+                ?.value || ""
+        ).trim().toLowerCase();
+
+    const status =
+        document.getElementById("applicantStatus")
+            ?.value || "all";
+
+    const sort =
+        document.getElementById("applicantSort")
+            ?.value || "updated";
+
+    let filtered =
+        applicants.filter(applicant => {
+
+            const matchesSearch =
+                applicant.name
+                    .toLowerCase()
+                    .includes(search);
+
+            const matchesStatus =
+                status === "all" ||
+                (status === "completed" &&
+                    applicant.completed) ||
+                (status === "incomplete" &&
+                    !applicant.completed);
+
+            return matchesSearch && matchesStatus;
+
+        });
+
+    filtered.sort((a,b) => {
+
+        if (sort === "name") {
+
+            return a.name.localeCompare(b.name);
+
+        }
+
+        if (sort === "scoreHigh") {
+
+            return (
+                (calculateAverage(b.ratings) || 0) -
+                (calculateAverage(a.ratings) || 0)
+            );
+
+        }
+
+        if (sort === "scoreLow") {
+
+            return (
+                (calculateAverage(a.ratings) || 0) -
+                (calculateAverage(b.ratings) || 0)
+            );
+
+        }
+
+        return (
+            new Date(b.updatedAt || 0) -
+            new Date(a.updatedAt || 0)
+        );
+
+    });
+
+
+    if (!filtered.length) {
+
+        container.innerHTML =
+            `<p class="muted">No applicants match your search.</p>`;
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        filtered.map(applicant => {
+
+            const average =
+                calculateAverage(applicant.ratings);
+
+            return `
+
+                <div class="applicant-row">
+
+                    <div
+                        onclick="openApplicant('${applicant.id}')"
+                        style="cursor:pointer;flex:1;">
+
+                        <div class="applicant-name">
+                            ${escapeHTML(applicant.name)}
+                        </div>
+
+                        <div class="applicant-meta">
+
+                            ${applicant.grade
+                                ? "Grade " +
+                                  escapeHTML(applicant.grade)
+                                : ""}
+
+                            ${applicant.interviewDate
+                                ? " · " +
+                                  escapeHTML(applicant.interviewDate)
+                                : ""}
+
+                        </div>
+
+                    </div>
+
+
+                    <div>
+
+                        <span class="badge ${
+                            applicant.completed
+                                ? "badge-success"
+                                : "badge-warning"
+                        }">
+
+                            ${
+                                applicant.completed
+                                    ? "Completed"
+                                    : "Incomplete"
+                            }
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="score">
+
+                        ${
+                            average !== null
+                                ? average.toFixed(2) + " / 5"
+                                : "—"
+                        }
+
+                    </div>
+
+
+                    <button
+                        class="btn btn-danger"
+                        onclick="deleteApplicant('${applicant.id}')">
+
+                        Delete
+
+                    </button>
+
+                </div>
+
+            `;
+
+        }).join("");
+
+}
+
+
+/* ============================================================
+   APPLICANT DETAILS
+   ============================================================ */
+
+function openApplicant(id) {
+
+    const applicant =
+        applicants.find(
+            item => item.id === id
+        );
+
+    if (!applicant) {
+        return;
+    }
+
+    document.getElementById("modalApplicantName")
+        .textContent =
+        applicant.name;
+
+    document.getElementById("modalApplicantMeta")
+        .textContent =
+        `${applicant.grade ? "Grade " + applicant.grade : ""}` +
+        `${applicant.interviewDate
+            ? " · Interviewed " + applicant.interviewDate
+            : ""}`;
+
+
+    const average =
+        calculateAverage(applicant.ratings);
+
+    let html = `
+
+        <hr>
+
+        <h3>Overall</h3>
+
+        <p>
+            <strong>Average rating:</strong>
+            ${
+                average !== null
+                    ? average.toFixed(2) + " / 5"
+                    : "Not rated"
+            }
+        </p>
+
+        <h3>Ratings</h3>
+
+    `;
+
+
+    RATING_CATEGORIES.forEach(category => {
+
+        html += `
+
+            <p>
+                <strong>
+                    ${escapeHTML(category.title)}
+                </strong>:
+                ${
+                    applicant.ratings?.[category.key]
+                        || "—"
+                }
+            </p>
+
+        `;
+
+    });
+
+
+    html += `<h3>Answers</h3>`;
+
+
+    QUESTIONS.forEach((question, index) => {
+
+        html += `
+
+            <div style="margin-bottom:18px;">
+
+                <strong>
+                    ${index + 1}. ${escapeHTML(question.text)}
+                </strong>
+
+                <p class="muted"
+                   style="white-space:pre-wrap;">
+
+                    ${
+                        escapeHTML(
+                            applicant.answers?.[index] ||
+                            "No answer recorded."
+                        )
+                    }
+
+                </p>
+
+            </div>
+
+        `;
+
+    });
+
+
+    html += `<h3>Interview Observations</h3>`;
+
+
+    if (applicant.observations?.length) {
+
+        html += `
+            <ul>
+                ${applicant.observations.map(
+                    observation =>
+                        `<li>${escapeHTML(observation)}</li>`
+                ).join("")}
+            </ul>
+        `;
+
+    } else {
+
+        html +=
+            `<p class="muted">No observations recorded.</p>`;
+
+    }
+
+
+    html += `
+
+        <h3>Notes</h3>
+
+        <p style="white-space:pre-wrap;">
+            ${
+                escapeHTML(
+                    applicant.notes ||
+                    "No notes recorded."
+                )
+            }
+        </p>
+
+    `;
+
+
+    document.getElementById("modalApplicantContent")
+        .innerHTML = html;
+
+    document.getElementById("applicantModal")
+        .classList.remove("hidden");
+
+}
+
+
+function closeApplicantModal() {
+
+    document.getElementById("applicantModal")
+        .classList.add("hidden");
+
+}
+
+
+async function deleteApplicant(id) {
+
+    const applicant =
+        applicants.find(
+            item => item.id === id
+        );
+
+    if (!applicant) {
+        return;
+    }
+
+    const confirmed =
+        confirm(
+            `Delete the interview for "${applicant.name}"?\n\n` +
+            `This cannot be undone unless you have a backup.`
+        );
+
+    if (!confirmed) {
+        return;
+    }
+
+    applicants =
+        applicants.filter(
+            item => item.id !== id
+        );
+
+    await saveAllApplicants();
+
+    renderApplicants();
+    renderDashboard();
+
+}
+
+
+/* ============================================================
+   JSON EXPORT
+   ============================================================ */
+
+function buildBackupObject() {
+
+    return {
+
+        app: "Science Olympiad Interview HQ",
+
+        formatVersion: 3,
+
+        exportedAt:
+            new Date().toISOString(),
+
+        applicants:
+            applicants
+
+    };
+
+}
+
+
+function downloadJSONBackup() {
+
+    const backup =
+        buildBackupObject();
+
+    const blob =
+        new Blob(
+            [JSON.stringify(backup, null, 2)],
+            { type: "application/json" }
+        );
+
+    const url =
+        URL.createObjectURL(blob);
+
+    const link =
+        document.createElement("a");
+
+    const date =
+        new Date()
+            .toISOString()
+            .slice(0, 10);
+
+    link.href = url;
+
+    link.download =
+        `science-olympiad-master-backup-${date}.json`;
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    link.remove();
+
+    URL.revokeObjectURL(url);
+
+}
+
+
+/* ============================================================
+   JSON NORMALIZATION
+   ============================================================ */
+
+function normalizeImportedData(data) {
+
+    if (!data) {
+        throw new Error("The file is empty.");
+    }
+
+    let records = null;
+
+    if (Array.isArray(data)) {
+
+        records = data;
+
+    } else if (Array.isArray(data.applicants)) {
+
+        records = data.applicants;
+
+    } else {
+
+        throw new Error(
+            "This does not appear to be a Science Olympiad Interview HQ backup."
+        );
+
+    }
+
+    return records
+        .filter(record => record && typeof record === "object")
+        .map(record => normalizeApplicant(record));
+
+}
+
+
+function normalizeApplicant(record) {
+
+    const normalized = {
+
+        id:
+            record.id ||
+            generateId(),
+
+        name:
+            String(record.name || "Unnamed Applicant").trim(),
+
+        grade:
+            record.grade
+                ? String(record.grade)
+                : "",
+
+        interviewDate:
+            record.interviewDate ||
+            "",
+
+        answers:
+            Array.isArray(record.answers)
+                ? QUESTIONS.map(
+                    (_, index) =>
+                        String(record.answers[index] || "")
+                )
+                : QUESTIONS.map(() => ""),
+
+        ratings:
+            {},
+
+        observations:
+            Array.isArray(record.observations)
+                ? record.observations.map(String)
+                : [],
+
+        notes:
+            String(record.notes || ""),
+
+        completed:
+            Boolean(record.completed),
+
+        createdAt:
+            validISO(record.createdAt)
+                ? record.createdAt
+                : new Date().toISOString(),
+
+        updatedAt:
+            validISO(record.updatedAt)
+                ? record.updatedAt
+                : validISO(record.createdAt)
+                    ? record.createdAt
+                    : new Date().toISOString()
+
+    };
+
+
+    /*
+       Backward compatibility:
+       The original application uses these rating keys.
+    */
+
+    RATING_CATEGORIES.forEach(category => {
+
+        const value =
+            record.ratings?.[category.key];
+
+        if (
+            value !== undefined &&
+            Number(value) >= 1 &&
+            Number(value) <= 5
+        ) {
+
+            normalized.ratings[category.key] =
+                Number(value);
+
+        }
+
+    });
+
+
+    return normalized;
+
+}
+
+
+function validISO(value) {
+
+    if (!value) {
+        return false;
+    }
+
+    return !Number.isNaN(
+        Date.parse(value)
+    );
+
+}
+
+
+/* ============================================================
+   MERGE MULTIPLE BACKUPS
+   ============================================================ */
+
+async function mergeSelectedFiles() {
+
+    const input =
+        document.getElementById("mergeFiles");
+
+    const files =
+        Array.from(input.files || []);
+
+    if (!files.length) {
+
+        alert(
+            "Please select at least one JSON backup file."
+        );
+
+        return;
+
+    }
+
+
+    const confirmed =
+        confirm(
+            `You selected ${files.length} backup file(s).\n\n` +
+            `The applicants in those files will be added to ` +
+            `your current master list.\n\n` +
+            `Existing records with the exact same applicant ID ` +
+            `will use the newer version.\n\n` +
+            `Continue?`
+        );
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    let totalRecords = 0;
+    let added = 0;
+    let updated = 0;
+    let skipped = 0;
+
+    const errors = [];
+
+    const importedRecords = [];
+
+
+    for (const file of files) {
+
+        try {
+
+            const text =
+                await file.text();
+
+            const data =
+                JSON.parse(text);
+
+            const records =
+                normalizeImportedData(data);
+
+            totalRecords += records.length;
+
+            importedRecords.push(
+                ...records
+            );
+
+        } catch (error) {
+
+            errors.push(
+                `${file.name}: ${error.message}`
+            );
+
+        }
+
+    }
+
+
+    /*
+       Exact-ID merge.
+       If two backups contain the same ID, they represent
+       the same browser record, so use the newer updatedAt.
+    */
+
+    const byId =
+        new Map(
+            applicants.map(
+                applicant =>
+                    [applicant.id, applicant]
+            )
+        );
+
+
+    for (const imported of importedRecords) {
+
+        const existing =
+            byId.get(imported.id);
+
+        if (!existing) {
+
+            applicants.push(imported);
+
+            byId.set(
+                imported.id,
+                imported
+            );
+
+            added++;
+
+            continue;
+
+        }
+
+
+        const existingTime =
+            Date.parse(existing.updatedAt || 0);
+
+        const importedTime =
+            Date.parse(imported.updatedAt || 0);
+
+
+        if (importedTime > existingTime) {
+
+            const index =
+                applicants.findIndex(
+                    applicant =>
+                        applicant.id === imported.id
+                );
+
+            if (index >= 0) {
+
+                applicants[index] =
+                    imported;
+
+            }
+
+            byId.set(
+                imported.id,
+                imported
+            );
+
+            updated++;
+
+        } else {
+
+            skipped++;
+
+        }
+
+    }
+
+
+    await saveAllApplicants();
+
+
+    /*
+       Detect possible duplicate names.
+       We intentionally DO NOT automatically merge these.
+    */
+
+    const possibleDuplicates =
+        findPossibleDuplicateNames();
+
+
+    renderDashboard();
+    renderApplicants();
+    refreshDataPage();
+
+
+    const summary =
+        document.getElementById("mergeSummary");
+
+    summary.classList.remove("hidden");
+
+    summary.innerHTML = `
+
+        <h4>Merge complete</h4>
+
+        <div class="grid grid-3">
+
+            <div class="merge-stat">
+                <strong>${files.length}</strong>
+                <span class="small muted">Files processed</span>
+            </div>
+
+            <div class="merge-stat">
+                <strong>${totalRecords}</strong>
+                <span class="small muted">Records found</span>
+            </div>
+
+            <div class="merge-stat">
+                <strong>${added}</strong>
+                <span class="small muted">New applicants added</span>
+            </div>
+
+            <div class="merge-stat">
+                <strong>${updated}</strong>
+                <span class="small muted">Existing records updated</span>
+            </div>
+
+            <div class="merge-stat">
+                <strong>${skipped}</strong>
+                <span class="small muted">Older duplicate records skipped</span>
+            </div>
+
+            <div class="merge-stat">
+                <strong>${possibleDuplicates.length}</strong>
+                <span class="small muted">Possible duplicate names</span>
+            </div>
+
+        </div>
+
+        ${
+            errors.length
+                ? `
+                    <div class="danger-box"
+                         style="margin-top:15px;">
+
+                        <strong>Files with errors:</strong>
+
+                        <ul>
+                            ${errors.map(
+                                error =>
+                                    `<li>${escapeHTML(error)}</li>`
+                            ).join("")}
+                        </ul>
+
+                    </div>
+                `
+                : ""
+        }
+
+        ${
+            possibleDuplicates.length
+                ? `
+                    <div class="warning-box"
+                         style="margin-top:15px;">
+
+                        <strong>
+                            Possible duplicate applicants detected.
+                        </strong>
+
+                        <p>
+                            Applicants with the same normalized name but
+                            different IDs were kept as separate records.
+                            This is intentional so two different students
+                            with the same name are not accidentally merged.
+                        </p>
+
+                        <ul>
+                            ${possibleDuplicates.map(
+                                group =>
+                                    `<li>
+                                        ${group.map(
+                                            name =>
+                                                escapeHTML(name)
+                                        ).join(" · ")}
+                                    </li>`
+                            ).join("")}
+                        </ul>
+
+                    </div>
+                `
+                : `
+                    <div class="info-box"
+                         style="margin-top:15px;">
+
+                        No possible duplicate names were detected.
+
+                    </div>
+                `
+        }
+
+    `;
+
+    input.value = "";
+
+}
+
+
+/* ============================================================
+   POSSIBLE DUPLICATES
+   ============================================================ */
+
+function normalizeName(name) {
+
+    return String(name || "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "")
+        .trim();
+
+}
+
+
+function findPossibleDuplicateNames() {
+
+    const groups =
+        new Map();
+
+    applicants.forEach(applicant => {
+
+        const normalized =
+            normalizeName(applicant.name);
+
+        if (!normalized) {
+            return;
+        }
+
+        if (!groups.has(normalized)) {
+
+            groups.set(
+                normalized,
+                []
+            );
+
+        }
+
+        groups.get(normalized)
+            .push(applicant);
+
+    });
+
+
+    return Array.from(groups.values())
+        .filter(group => group.length > 1)
+        .map(group =>
+            group.map(applicant =>
+                applicant.name
+            )
+        );
+
+}
+
+
+/* ============================================================
+   REPLACE ALL DATA
+   ============================================================ */
+
+async function replaceWithSelectedFile() {
+
+    const input =
+        document.getElementById("replaceFile");
+
+    const file =
+        input.files?.[0];
+
+    if (!file) {
+
+        alert(
+            "Please select a JSON backup file."
+        );
+
+        return;
+
+    }
+
+
+    const confirmed =
+        confirm(
+            "WARNING\n\n" +
+            "This will DELETE the applicant records currently " +
+            "stored in this browser and replace them with the " +
+            "selected backup.\n\n" +
+            "Make sure you have a backup of the current master list first.\n\n" +
+            "Continue?"
+        );
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    try {
+
+        const text =
+            await file.text();
+
+        const data =
+            JSON.parse(text);
+
+        const records =
+            normalizeImportedData(data);
+
+        applicants =
+            records;
+
+        await saveAllApplicants();
+
+        renderDashboard();
+        renderApplicants();
+        refreshDataPage();
+
+        input.value = "";
+
+        alert(
+            `Restore complete.\n\n` +
+            `${records.length} applicant(s) are now stored in this browser.`
+        );
+
+    } catch (error) {
+
+        alert(
+            "Could not restore this file:\n\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   DATA PAGE
+   ============================================================ */
+
+function refreshDataPage() {
+
+    const info =
+        document.getElementById("storageInfo");
+
+    if (!info) {
+        return;
+    }
+
+    const completed =
+        applicants.filter(
+            applicant =>
+                applicant.completed
+        ).length;
+
+    const possible =
+        findPossibleDuplicateNames().length;
+
+    info.innerHTML = `
+
+        <strong>Applicants stored:</strong>
+        ${applicants.length}<br>
+
+        <strong>Completed interviews:</strong>
+        ${completed}<br>
+
+        <strong>Possible duplicate-name groups:</strong>
+        ${possible}<br>
+
+        <strong>Storage:</strong>
+        ${usingIndexedDB
+            ? "IndexedDB"
+            : "localStorage fallback"}
+
+        <br>
+
+        <strong>Important:</strong>
+        Data is stored locally in this browser and is not stored
+        by GitHub Pages.
+
+    `;
+
+}
+
+
+/* ============================================================
+   DELETE ALL
+   ============================================================ */
+
+async function deleteAllData() {
+
+    const confirmed =
+        confirm(
+            "DELETE ALL LOCAL DATA?\n\n" +
+            "This will permanently remove all applicant records " +
+            "from this browser.\n\n" +
+            "Only continue if you have a backup."
+        );
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    const doubleConfirmed =
+        confirm(
+            "Are you absolutely sure?\n\n" +
+            "This cannot be undone without a backup."
+        );
+
+    if (!doubleConfirmed) {
+        return;
+    }
+
+
+    applicants = [];
+
+    await saveAllApplicants();
+
+    renderDashboard();
+    renderApplicants();
+    refreshDataPage();
+
+    alert(
+        "All local applicant data has been deleted."
+    );
+
+}
+
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+
+function generateId() {
+
+    if (
+        window.crypto &&
+        typeof crypto.randomUUID === "function"
+    ) {
+
+        return crypto.randomUUID();
+
+    }
+
+    return (
+        Date.now().toString(36) +
+        "-" +
+        Math.random()
+            .toString(36)
+            .slice(2)
+    );
+
+}
+
+
+function escapeHTML(value) {
+
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+/* ============================================================
+   KEYBOARD / MODAL
+   ============================================================ */
+
+document.addEventListener("keydown", event => {
+
+    if (event.key === "Escape") {
+
+        closeApplicantModal();
+
+    }
+
+});
+
+
+document.getElementById("applicantModal")
+    .addEventListener("click", event => {
+
+        if (
+            event.target.id ===
+            "applicantModal"
+        ) {
+
+            closeApplicantModal();
+
+        }
+
+    });
+
+
+/* ============================================================
+   END
+   ============================================================ */
+</script>
+
+</body>
+</html>
