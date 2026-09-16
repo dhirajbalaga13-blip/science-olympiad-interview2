@@ -1,4959 +1,3304 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Science Olympiad Tryout Tracker</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Science Olympiad applicant interview tracker">
+<title>Science Olympiad Interview HQ</title>
 
 <style>
 :root{
-  --ink:#16302C;
-  --ink-2:#1F3F38;
-  --paper:#FAF6EC;
-  --paper-2:#F1EAD8;
-  --line:#DDD2AF;
-  --accent:#D6A419;
-  --accent-deep:#A97C0F;
-  --good:#3F6E56;
-  --good-bg:#E3EEE6;
-  --warn:#AE4636;
-  --warn-bg:#F6E3DE;
-  --text:#20211C;
-  --text-muted:#6B6558;
-  --radius:7px;
-  --mono:'IBM Plex Mono','Courier New',monospace;
-  --sans:'IBM Plex Sans',Arial,sans-serif;
+  --nav:#10233f;
+  --nav2:#18365d;
+  --blue:#1769e0;
+  --blue2:#0f4fae;
+  --bg:#f4f7fb;
+  --card:#fff;
+  --text:#17212f;
+  --muted:#68778a;
+  --line:#dbe3ed;
+  --good:#087443;
+  --warn:#9a5b00;
+  --bad:#b42318;
 }
 
-*{box-sizing:border-box;}
+*{box-sizing:border-box}
 
-html,body{
-  margin:0;
-  padding:0;
-}
+html{scroll-behavior:smooth}
 
 body{
-  font-family:var(--sans);
-  background:var(--ink);
-  color:var(--text);
-  -webkit-font-smoothing:antialiased;
-}
-
-button{
-  font-family:var(--sans);
-}
-
-button,input,textarea,select{
-  font:inherit;
-}
-
-button{
-  cursor:pointer;
-}
-
-h1,h2,h3,h4{
   margin:0;
-  font-family:var(--sans);
+  background:var(--bg);
+  color:var(--text);
+  font:15px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif
 }
 
-p{
-  margin:0 0 10px 0;
-  line-height:1.55;
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible{
+  outline:3px solid #9ec5ff;
+  outline-offset:1px
 }
 
-ul{
-  margin:0 0 10px 0;
-  padding-left:20px;
-  line-height:1.55;
-}
-
-a{
-  color:var(--accent-deep);
-}
-
-::selection{
-  background:var(--accent);
-  color:var(--ink);
-}
-
-#app{
-  display:flex;
+.app{
   min-height:100vh;
+  display:grid;
+  grid-template-columns:255px 1fr
 }
 
-/* ============================================================
-   SIDEBAR
-============================================================ */
-
-.sidebar{
-  width:236px;
-  flex-shrink:0;
-  background:var(--ink);
-  color:var(--paper);
-  display:flex;
-  flex-direction:column;
-  padding:26px 16px;
+aside{
+  background:var(--nav);
+  color:#fff;
+  padding:22px 16px;
   position:sticky;
   top:0;
   height:100vh;
-  overflow-y:auto;
+  overflow:auto
 }
 
-.brand-eyebrow{
-  font-family:var(--mono);
+.brand{
+  font-size:21px;
+  font-weight:850;
+  letter-spacing:-.3px
+}
+
+.tag{
   font-size:12px;
-  color:var(--accent);
-  letter-spacing:.04em;
-  margin-bottom:6px;
+  color:#b7c7dc;
+  margin:2px 0 24px
 }
 
-.brand-title{
-  font-size:19px;
-  font-weight:700;
-  line-height:1.3;
-  margin-bottom:30px;
-}
-
-.nav-btn{
-  display:flex;
-  align-items:center;
-  gap:10px;
+nav button{
+  display:block;
   width:100%;
   text-align:left;
-  background:none;
-  border:none;
-  color:var(--paper);
-  padding:10px 12px;
-  border-radius:var(--radius);
-  font-size:14.5px;
-  cursor:pointer;
-  margin-bottom:3px;
+  border:0;
+  background:transparent;
+  color:#dce7f6;
+  padding:11px 12px;
+  border-radius:9px;
+  margin:4px 0
 }
 
-.nav-btn svg{
-  flex-shrink:0;
-  width:17px;
-  height:17px;
-  opacity:.85;
+nav button:hover,
+nav button.active{
+  background:var(--nav2);
+  color:#fff
 }
 
-.nav-btn:hover{
-  background:rgba(255,255,255,.09);
-}
-
-.nav-btn.active{
-  background:var(--accent);
-  color:var(--ink);
-}
-
-.sidebar-foot{
-  margin-top:auto;
-  padding:20px 10px 0;
+.side-note{
+  margin-top:28px;
+  border-top:1px solid #36506f;
+  padding-top:18px;
   font-size:12px;
-  line-height:1.55;
-  color:rgba(250,246,236,.62);
+  color:#b7c7dc
 }
 
-.sidebar-foot strong{
-  color:var(--paper);
+.side-note strong{color:#fff}
+
+main{
+  width:100%;
+  max-width:1220px;
+  margin:auto;
+  padding:28px
 }
 
-/* ============================================================
-   MAIN
-============================================================ */
-
-.main{
-  flex:1;
-  min-width:0;
-  background:var(--paper);
-  min-height:100vh;
-  padding:40px 46px 70px;
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:18px;
+  margin-bottom:20px
 }
 
-.view-head{
-  margin-bottom:26px;
+h1{
+  font-size:30px;
+  line-height:1.2;
+  margin:0 0 5px;
+  letter-spacing:-.5px
 }
 
-.view-eyebrow{
-  font-family:var(--mono);
-  font-size:11px;
-  letter-spacing:.08em;
-  color:var(--accent-deep);
-  margin-bottom:7px;
-  font-weight:700;
+h2{
+  font-size:20px;
+  margin:0 0 12px
 }
 
-.view-title{
-  font-size:31px;
-  line-height:1.15;
-  letter-spacing:-.025em;
-  color:var(--ink);
+h3{
+  font-size:16px;
+  margin:0 0 8px
 }
 
-.view-sub{
-  margin-top:7px;
-  color:var(--text-muted);
-  max-width:720px;
-  font-size:15px;
-}
+.muted{color:var(--muted)}
 
-.card{
-  background:#fff;
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  padding:20px;
-  margin-bottom:14px;
-}
-
-.card h3{
-  color:var(--ink);
-}
-
-.btn-row{
+.actions{
   display:flex;
   gap:8px;
-  flex-wrap:wrap;
-  align-items:center;
+  flex-wrap:wrap
 }
 
 .btn{
   border:1px solid var(--line);
   background:#fff;
   color:var(--text);
-  border-radius:var(--radius);
   padding:9px 13px;
-  font-size:13.5px;
-  font-weight:600;
+  border-radius:8px;
+  font-weight:700
 }
 
 .btn:hover{
-  border-color:#B9AA7D;
-  background:var(--paper);
+  border-color:#aebdce;
+  background:#f9fbfd
 }
 
-.btn-primary{
-  background:var(--ink);
-  color:var(--paper);
-  border-color:var(--ink);
+.btn.primary{
+  background:var(--blue);
+  border-color:var(--blue);
+  color:#fff
 }
 
-.btn-primary:hover{
-  background:var(--ink-2);
-  border-color:var(--ink-2);
+.btn.primary:hover{background:var(--blue2)}
+.btn.good{color:var(--good)}
+.btn.danger{color:var(--bad)}
+
+.btn.small{
+  padding:6px 9px;
+  font-size:13px
 }
 
-.btn-ghost{
-  background:transparent;
-}
-
-.btn-danger{
-  color:#8D3025;
-  border-color:#D9A49C;
-  background:#FFF8F6;
-}
-
-.btn-danger:hover{
-  background:var(--warn-bg);
-}
-
-.btn-sm{
-  padding:7px 10px;
-  font-size:12px;
-}
-
-.field{
-  margin-bottom:17px;
-}
-
-.field label{
-  display:block;
-  font-size:12px;
-  font-family:var(--mono);
-  font-weight:600;
-  color:var(--text-muted);
-  margin-bottom:6px;
-}
-
-.field input,
-.field textarea,
-.field select,
-.roster-controls input,
-.roster-controls select{
-  width:100%;
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  background:#fff;
-  color:var(--text);
-  padding:10px 11px;
-  outline:none;
-}
-
-.field input:focus,
-.field textarea:focus,
-.field select:focus,
-.roster-controls input:focus,
-.roster-controls select:focus{
-  border-color:var(--accent-deep);
-  box-shadow:0 0 0 2px rgba(214,164,25,.14);
-}
-
-.field textarea{
-  min-height:150px;
-  resize:vertical;
-}
-
-.grid-2{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
-}
-
-.grid-3{
+.grid3{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:12px;
+  gap:14px
 }
 
-.stat-grid{
+.grid2{
   display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:12px;
-  margin-bottom:20px;
+  grid-template-columns:1fr 1fr;
+  gap:14px
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:18px;
+  box-shadow:0 2px 10px rgba(23,43,77,.045)
 }
 
 .stat{
-  background:#fff;
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  padding:17px;
+  font-size:31px;
+  font-weight:850
 }
 
-.stat-label{
-  font-family:var(--mono);
-  color:var(--text-muted);
-  font-size:10px;
-  letter-spacing:.06em;
-  text-transform:uppercase;
-  margin-bottom:8px;
-}
-
-.stat-value{
-  font-size:27px;
-  font-weight:700;
-  color:var(--ink);
-}
-
-.muted{
-  color:var(--text-muted);
-}
-
-.hint{
-  font-size:12px;
-  color:var(--text-muted);
-  margin-top:10px;
-}
-
-.small{
-  font-size:12px;
-}
-
-.empty-state{
-  border:1px dashed var(--line);
-  padding:38px 20px;
-  text-align:center;
-  color:var(--text-muted);
-  border-radius:var(--radius);
-  background:rgba(255,255,255,.42);
-}
-
-.banner{
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  padding:13px 15px;
-  margin-bottom:14px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:15px;
-  flex-wrap:wrap;
-  font-size:13.5px;
-}
-
-.banner-accent{
-  background:#F7F0D8;
-  border-color:#D9C681;
-}
-
-.banner-warn{
-  background:var(--warn-bg);
-  border-color:#E4B3AA;
-  color:#71352E;
-}
-
-/* ============================================================
-   DASHBOARD
-============================================================ */
-
-.dashboard-grid{
-  display:grid;
-  grid-template-columns:1.25fr .75fr;
-  gap:14px;
-}
-
-.quick-card{
-  min-height:150px;
-}
-
-.recent-title{
-  font-size:15px;
-  margin-bottom:13px;
-}
-
-.roster-grid{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:12px;
-}
-
-.applicant-card{
-  border:1px solid var(--line);
-  background:#fff;
-  border-radius:var(--radius);
-  padding:16px;
-  cursor:pointer;
-  transition:.12s ease;
-}
-
-.applicant-card:hover{
-  border-color:#BDAA6D;
-  transform:translateY(-1px);
-}
-
-.applicant-name{
-  font-size:16px;
-  font-weight:700;
-  color:var(--ink);
-}
-
-.applicant-meta{
-  font-size:12px;
-  color:var(--text-muted);
-  margin-top:4px;
-}
-
-.applicant-card-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:12px;
-}
-
-.applicant-score{
-  font-family:var(--mono);
-  font-size:12px;
-  color:var(--accent-deep);
-  white-space:nowrap;
-}
-
-.badge{
+.pill{
   display:inline-block;
-  padding:4px 7px;
-  border-radius:4px;
-  font-family:var(--mono);
-  font-size:10px;
-  font-weight:600;
-  white-space:nowrap;
-}
-
-.badge-New{
-  background:#EEE9DA;
-  color:#655D4D;
-}
-
-.badge-Interviewed{
-  background:#E8E5D5;
-  color:#665C38;
-}
-
-.badge-Callback{
-  background:#E6EFE8;
-  color:#38604B;
-}
-
-.badge-Accepted{
-  background:#DDEDE2;
-  color:#2E6647;
-}
-
-.badge-Waitlisted{
-  background:#F4ECD5;
-  color:#7A601B;
-}
-
-.badge-Not-Selected{
-  background:#F3E2DE;
-  color:#8A3C32;
-}
-
-/* ============================================================
-   WIZARD
-============================================================ */
-
-.wizard-progress{
-  display:flex;
-  gap:5px;
-  margin-bottom:17px;
-}
-
-.wizard-dot{
-  height:4px;
-  flex:1;
-  max-width:85px;
-  background:#DDD7C4;
-  border-radius:4px;
-}
-
-.wizard-dot.current,
-.wizard-dot.done{
-  background:var(--accent);
-}
-
-.step-kicker{
-  font-family:var(--mono);
-  font-size:10px;
-  letter-spacing:.08em;
-  color:var(--accent-deep);
-  margin-bottom:7px;
-  font-weight:700;
-}
-
-.question-purpose{
-  background:var(--paper);
-  border-left:3px solid var(--accent);
-  padding:11px 13px;
-  margin:14px 0;
-  font-size:13px;
-  color:var(--text-muted);
-}
-
-.question-list{
-  margin-top:18px;
-}
-
-.question-list li{
-  margin-bottom:8px;
-}
-
-.rating-row{
-  padding:14px 0;
-  border-bottom:1px solid var(--paper-2);
-}
-
-.rating-row:last-child{
-  border-bottom:none;
-}
-
-.rating-name{
-  font-size:14px;
-  font-weight:700;
-  color:var(--ink);
-}
-
-.rating-description{
-  color:var(--text-muted);
-  font-size:12.5px;
-  margin:3px 0 8px;
-}
-
-.stars{
-  display:flex;
-  gap:4px;
-}
-
-.star{
-  width:33px;
-  height:30px;
-  border:1px solid var(--line);
-  background:#fff;
-  border-radius:5px;
-  color:#B9AE90;
-  font-size:15px;
-  cursor:pointer;
-}
-
-.star:hover,
-.star.active{
-  background:#F7EBC2;
-  color:var(--accent-deep);
-  border-color:#D5BD70;
-}
-
-.status-select{
-  width:100%;
-  border:1px solid var(--line);
-  background:#fff;
-  padding:9px 10px;
-  border-radius:var(--radius);
-}
-
-/* ============================================================
-   ROSTER
-============================================================ */
-
-.roster-controls{
-  display:grid;
-  grid-template-columns:1.5fr .8fr;
-  gap:10px;
-  margin-bottom:13px;
-}
-
-.chip-row{
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-  margin-bottom:16px;
-}
-
-.chip{
-  border:1px solid var(--line);
-  background:#fff;
-  color:var(--text-muted);
-  border-radius:20px;
-  padding:6px 10px;
+  border-radius:999px;
+  background:#eaf2ff;
+  color:#1558ad;
+  padding:3px 9px;
   font-size:12px;
-  cursor:pointer;
+  font-weight:800
 }
 
-.chip:hover{
-  background:var(--paper);
+.pill.good{
+  background:#e9f8ef;
+  color:#087443
 }
 
-.chip.active{
-  background:var(--ink);
-  color:var(--paper);
-  border-color:var(--ink);
+.pill.warn{
+  background:#fff5df;
+  color:#8a5200
 }
 
-/* ============================================================
-   GUIDE
-============================================================ */
-
-.guide-section{
-  margin-bottom:28px;
+label{
+  display:block;
+  font-weight:750;
+  margin:14px 0 6px
 }
 
-.guide-section h3{
-  font-size:17px;
-  margin-bottom:8px;
+input,
+textarea,
+select{
+  width:100%;
+  border:1px solid #c9d4e1;
+  border-radius:8px;
+  padding:10px 11px;
+  background:#fff;
+  color:var(--text)
 }
 
-.guide-section p{
-  max-width:820px;
+textarea{
+  min-height:105px;
+  resize:vertical
 }
 
-.info-box{
-  background:#EEF3EC;
-  border:1px solid #C6D8C8;
-  border-radius:var(--radius);
+hr{
+  border:0;
+  border-top:1px solid var(--line);
+  margin:20px 0
+}
+
+.notice{
+  border:1px solid #efd18b;
+  background:#fff8e8;
+  border-radius:10px;
   padding:13px 15px;
-  margin:12px 0;
+  margin:12px 0
 }
 
-.warning-box{
-  background:#FFF7E4;
-  border:1px solid #E1C979;
-  border-radius:var(--radius);
-  padding:14px 15px;
+.notice.good{
+  border-color:#a9dfbf;
+  background:#edfbf3
 }
 
-.danger-box{
-  background:#FFF2EF;
-  border:1px solid #E4B1A8;
-  border-radius:var(--radius);
-  padding:14px 15px;
-}
-
-.guide-list{
-  max-width:820px;
-}
-
-/* ============================================================
-   DATA PAGE
-============================================================ */
-
-.merge-stat{
-  background:var(--paper);
+.question{
   border:1px solid var(--line);
-  border-radius:var(--radius);
-  padding:13px;
+  border-radius:10px;
+  padding:15px;
+  margin:13px 0;
+  background:#fbfcfe
 }
 
-.merge-stat strong{
-  display:block;
-  color:var(--ink);
-  font-size:22px;
-  margin-bottom:2px;
+.qhead{
+  display:flex;
+  gap:10px;
+  align-items:flex-start
 }
 
-.merge-stat span{
-  display:block;
+.qtext{
+  font-weight:800;
+  margin-top:6px
 }
+
+.score-row{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:12px;
+  align-items:center;
+  padding:12px 0;
+  border-bottom:1px solid var(--line)
+}
+
+.score-row:last-child{border-bottom:0}
+
+.stars{white-space:nowrap}
+
+.stars button{
+  border:0;
+  background:none;
+  color:#c7ced8;
+  font-size:24px;
+  line-height:1;
+  padding:0 1px
+}
+
+.stars button.on{color:#e99a00}
+
+.applicant{
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  align-items:center;
+  padding:14px 0;
+  border-bottom:1px solid var(--line)
+}
+
+.applicant:last-child{border-bottom:0}
+
+.empty{
+  text-align:center;
+  padding:42px 15px;
+  color:var(--muted)
+}
+
+.stepper{
+  display:flex;
+  gap:7px;
+  align-items:center;
+  flex-wrap:wrap;
+  margin-bottom:17px
+}
+
+.stepper span{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  color:var(--muted);
+  font-size:13px;
+  font-weight:700
+}
+
+.stepper b{
+  width:27px;
+  height:27px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:#dfe7f1;
+  color:#526173
+}
+
+.stepper .active b{
+  background:var(--blue);
+  color:#fff
+}
+
+details{
+  border:1px solid var(--line);
+  border-radius:9px;
+  padding:11px 13px;
+  margin:9px 0;
+  background:#fff
+}
+
+summary{
+  font-weight:750;
+  cursor:pointer
+}
+
+ul,ol{padding-left:23px}
 
 .danger-zone{
-  border-color:#D9A49C;
-  background:#FFF7F5;
+  border:1px solid #efb0aa;
+  background:#fff7f6
 }
-
-/* ============================================================
-   MODAL
-============================================================ */
-
-.modal-backdrop{
-  position:fixed;
-  inset:0;
-  background:rgba(22,48,44,.68);
-  z-index:100;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:22px;
-}
-
-.modal{
-  width:min(800px,100%);
-  max-height:90vh;
-  overflow:auto;
-  background:var(--paper);
-  border-radius:var(--radius);
-  border:1px solid #C8B98C;
-  box-shadow:0 20px 60px rgba(0,0,0,.28);
-  padding:24px;
-  position:relative;
-}
-
-.modal-close{
-  position:absolute;
-  right:15px;
-  top:12px;
-  border:none;
-  background:none;
-  font-size:25px;
-  color:var(--text-muted);
-  cursor:pointer;
-}
-
-.detail-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:14px;
-  flex-wrap:wrap;
-  padding-right:25px;
-}
-
-.detail-name{
-  font-size:23px;
-  font-weight:700;
-  color:var(--ink);
-}
-
-.detail-meta{
-  font-size:13px;
-  color:var(--text-muted);
-  margin-top:4px;
-}
-
-.qa-block{
-  margin-bottom:17px;
-}
-
-.qa-q{
-  font-family:var(--mono);
-  font-size:11px;
-  color:var(--accent-deep);
-  margin-bottom:5px;
-  font-weight:600;
-}
-
-.qa-a{
-  font-size:14px;
-  background:#fff;
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  padding:11px 13px;
-  white-space:pre-wrap;
-  min-height:20px;
-}
-
-.qa-a.empty{
-  color:#A9A392;
-  font-style:italic;
-}
-
-/* ============================================================
-   TOAST
-============================================================ */
 
 .toast{
   position:fixed;
-  bottom:26px;
-  left:50%;
-  transform:translateX(-50%);
-  background:var(--ink);
-  color:var(--paper);
-  padding:13px 24px;
-  border-radius:7px;
-  font-size:14px;
-  box-shadow:0 6px 20px rgba(0,0,0,.3);
-  z-index:200;
-  opacity:1;
-  transition:opacity .25s,transform .25s;
+  right:18px;
+  bottom:18px;
+  background:#10233f;
+  color:#fff;
+  padding:12px 15px;
+  border-radius:9px;
+  box-shadow:0 7px 25px rgba(0,0,0,.18);
+  z-index:20;
+  max-width:360px
 }
 
-.toast.hidden{
-  opacity:0;
-  transform:translateX(-50%) translateY(10px);
-  pointer-events:none;
-}
-
-.divider{
-  height:1px;
-  background:var(--line);
-  margin:24px 0;
-}
-
-.kv{
-  display:flex;
-  justify-content:space-between;
-  font-size:14px;
-  padding:8px 0;
-  border-bottom:1px solid var(--paper-2);
-}
-
-.kv:last-child{
-  border-bottom:none;
-}
-
-.kv b{
-  font-family:var(--mono);
-}
-
-code.filekey{
-  font-family:var(--mono);
-  background:var(--paper-2);
-  padding:2px 6px;
-  border-radius:4px;
-  font-size:12.5px;
-}
-
-/* ============================================================
-   RESPONSIVE
-============================================================ */
-
-@media(max-width:950px){
-  .sidebar{
-    width:210px;
-  }
-
-  .main{
-    padding:30px 28px 60px;
-  }
-
-  .stat-grid{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .dashboard-grid{
-    grid-template-columns:1fr;
-  }
-}
-
-@media(max-width:720px){
-  #app{
-    display:block;
-  }
-
-  .sidebar{
-    width:100%;
-    height:auto;
+@media(max-width:850px){
+  .app{grid-template-columns:1fr}
+  aside{
     position:static;
-    padding:18px 15px;
+    height:auto
+  }
+  .grid3,.grid2{grid-template-columns:1fr}
+  main{padding:18px}
+  .top{flex-direction:column}
+}
+
+@media(max-width:560px){
+  .applicant,.score-row{
+    align-items:flex-start;
+    flex-direction:column;
+    display:flex
   }
 
-  .brand-title{
-    margin-bottom:16px;
-  }
-
-  .nav-btn{
-    display:inline-flex;
-    width:auto;
-    margin-right:3px;
-  }
-
-  #navList{
-    display:flex;
-    flex-wrap:wrap;
-  }
-
-  .sidebar-foot{
-    margin-top:14px;
-  }
-
-  .main{
-    padding:24px 17px 50px;
-  }
-
-  .grid-2,
-  .grid-3,
-  .roster-grid,
-  .stat-grid,
-  .roster-controls{
-    grid-template-columns:1fr;
-  }
-
-  .view-title{
-    font-size:27px;
-  }
+  .stars{width:100%}
 }
 </style>
 </head>
 
 <body>
 
-<div id="app">
+<div class="app">
 
-  <aside class="sidebar">
+<aside>
 
-    <div class="brand-eyebrow">
-      SPECIMEN NO. 5
-    </div>
+<div class="brand">Science Olympiad</div>
+<div class="tag">Interview HQ &bull; GitHub Pages edition</div>
 
-    <div class="brand-title">
-      Science Olympiad<br>
-      Tryout Tracker
-    </div>
+<nav>
 
-    <nav id="navList"></nav>
+<button data-page="dashboard" class="active">
+&#127968; Dashboard
+</button>
 
-    <div class="sidebar-foot">
-      <strong>Your data lives in this browser.</strong><br>
-      Export a backup often from the Backups tab &mdash; see the note there for why that matters.
-    </div>
+<button data-page="interview">
+&#10133; New Interview
+</button>
 
-  </aside>
+<button data-page="applicants">
+&#128101; Applicants
+</button>
 
-  <main class="main" id="main"></main>
+<button data-page="guide">
+&#128214; Idiot's Guide
+</button>
+
+<button data-page="data">
+&#128190; Backup &amp; Data
+</button>
+
+</nav>
+
+<div class="side-note">
+
+<strong>DATA SAFETY</strong>
+
+<br><br>
+
+Records are saved in this browser.
+They are not stored in this GitHub repository.
+Export a JSON backup regularly.
 
 </div>
 
-<div id="modalRoot"></div>
+</aside>
 
-<div id="toast" class="toast hidden"></div>
+<main id="main"></main>
 
-<!--
-  IMPORTANT:
-  This is now MULTIPLE files for merge.
-  Replace mode still uses the first selected file only.
--->
-<input
-  type="file"
-  id="importFileInput"
-  accept="application/json,.json"
-  multiple
-  style="display:none"
->
+</div>
 
 <script>
-(function(){
+
 "use strict";
 
-/* ============================================================
-   CONTENT
-============================================================ */
+/*
+SCIENCE OLYMPIAD INTERVIEW HQ
 
-var QUESTIONS = [
-  {
-    id:"q1",
-    short:"Motivation",
-    text:"What made you want to join Science Olympiad?",
-    purpose:"This tells you whether they're here for a real reason or just filling a slot on a schedule.",
-    listenFor:"A specific memory, a person, or an event category that got them curious.",
-    green:[
-      "Names a specific moment, class, or event that hooked them.",
-      "Can already name an event or two they want to try.",
-      "Tone picks up when they talk about it."
-    ],
-    red:[
-      "\"It sounded fun\" or \"my friend/parent signed me up\" with nothing added.",
-      "Can't name a single event or topic they're curious about.",
-      "Answer is one sentence with no follow-up when you ask why."
-    ],
-    followup:"Try: \"What event are you most excited to try, and why that one?\""
-  },
-  {
-    id:"q2",
-    short:"Outside obsession",
-    text:"What's something you're genuinely obsessed with outside of school?",
-    purpose:"Kids who go deep on something on their own tend to bring that same drive to a build or study event.",
-    listenFor:"Depth. Can they teach you something in 30 seconds? Did they go down this path on their own?",
-    green:[
-      "Gets specific fast.",
-      "Mentions doing this unprompted, on their own time.",
-      "You learn something new from them."
-    ],
-    red:[
-      "Can't think of anything after a long pause.",
-      "Answer stays surface-level even after a follow-up.",
-      "Describes something passive with no personal investment."
-    ],
-    followup:"Try: \"What's the coolest part about that?\""
-  },
-  {
-    id:"q3",
-    short:"Problem solving",
-    text:"Tell me about a time something you worked on didn't go the way you planned. What did you do?",
-    purpose:"This gets at resilience, ownership, and how they react when the obvious plan fails.",
-    listenFor:"What they did after the failure, not just how bad the failure was.",
-    green:[
-      "Owns their part of the problem.",
-      "Describes a concrete adjustment.",
-      "Can explain what they learned."
-    ],
-    red:[
-      "Blames everyone else.",
-      "Can't describe what they changed.",
-      "Treats failure as evidence they simply aren't good at something."
-    ],
-    followup:"Try: \"What would you do differently next time?\""
-  },
-  {
-    id:"q4",
-    short:"Creativity",
-    text:"If you could add any event to Science Olympiad that doesn't exist, what would it be and why?",
-    purpose:"A low-pressure way to see whether they can generate an original idea and explain it.",
-    listenFor:"Whether they build an actual event rather than just naming a topic.",
-    green:[
-      "Invents a concrete challenge.",
-      "Explains rules or scoring.",
-      "Has a reason it would be fun or educational."
-    ],
-    red:[
-      "Cannot offer an idea at all.",
-      "Simply renames an existing event.",
-      "Has no explanation for why the event would work."
-    ],
-    followup:"Try: \"How would teams actually compete in it?\""
-  },
-  {
-    id:"q5",
-    short:"Team fit",
-    text:"What would make this year's team different from last year in your opinion?",
-    purpose:"This looks for constructive thinking about team culture rather than simple criticism.",
-    listenFor:"Specific, respectful ideas and whether they're already thinking about contributing.",
-    green:[
-      "Suggests a concrete improvement.",
-      "Balances criticism with respect.",
-      "Talks about what they personally could contribute."
-    ],
-    red:[
-      "Purely negative about previous teams.",
-      "Has no opinion or idea.",
-      "Focuses on popularity or status rather than teamwork."
-    ],
-    followup:"Try: \"What part of that would you personally help with?\""
-  }
+Static GitHub Pages application.
+
+Applicant information is NOT stored in GitHub.
+
+Data is stored locally in the browser using IndexedDB.
+localStorage is used as a fallback if IndexedDB is unavailable.
+
+IMPORTANT:
+Never upload applicant JSON backups to GitHub.
+*/
+
+const DB_NAME = "ScienceOlympiadInterviewHQ";
+const DB_VERSION = 1;
+const STORE = "applicants";
+const FALLBACK_KEY = "sciOlyInterviewHQ_fallback_v2";
+
+const QUESTIONS = [
+
+"What made you want to join Science Olympiad?",
+
+"What's something you're genuinely obsessed with outside of school?",
+
+"Tell me about a time something you worked on didn't go the way you planned. What did you do?",
+
+"If you could add any event to Science Olympiad that doesn't exist, what would it be and why?",
+
+"What would make this year's team different from last year in your opinion?"
+
 ];
 
-var RATING_CATEGORIES = [
-  {
-    id:"passion",
-    label:"Interest & Motivation",
-    basedOn:"Based on Q1",
-    description:"Evidence that they genuinely want to participate.",
-    anchors:{
-      1:"Little evidence of genuine interest.",
-      3:"Interested, but motivation is fairly general.",
-      5:"Strong, specific, self-driven motivation."
-    }
-  },
-  {
-    id:"communication",
-    label:"Communication",
-    basedOn:"Across the interview",
-    description:"Clarity, specificity, listening, and ability to explain thinking.",
-    anchors:{
-      1:"Very difficult to follow or gives almost no useful detail.",
-      3:"Gets the point across, but needs prompting.",
-      5:"Clear, structured, specific, and easy to understand."
-    }
-  },
-  {
-    id:"resilience",
-    label:"Problem-Solving & Resilience",
-    basedOn:"Based on Q3",
-    description:"How thoughtfully they respond to setbacks and mistakes.",
-    anchors:{
-      1:"Cannot recall a real setback, or blames others with no reflection.",
-      3:"Describes a setback but offers little insight.",
-      5:"Owns the setback, adjusts their approach, and explains what they learned."
-    }
-  },
-  {
-    id:"creativity",
-    label:"Creativity & Original Thinking",
-    basedOn:"Based on Q4",
-    description:"Original ideas, flexible thinking, and interesting perspectives.",
-    anchors:{
-      1:"No real idea offered.",
-      3:"Reasonable new idea, but thin on implementation.",
-      5:"Genuinely original idea with a clear format and reason it works."
-    }
-  },
-  {
-    id:"teamfit",
-    label:"Team Fit / Culture Add",
-    basedOn:"Based on Q5 and overall impression",
-    description:"Likelihood of contributing positively and working well with teammates.",
-    anchors:{
-      1:"Purely negative about the past team, or no opinion at all.",
-      3:"Fair but generic suggestion.",
-      5:"Specific, constructive idea delivered respectfully."
-    }
-  }
+const RATINGS = [
+
+[
+"Interest & motivation",
+"Evidence that they genuinely want to participate and understand what they are joining."
+],
+
+[
+"Curiosity & passion",
+"Depth, enthusiasm, curiosity, or genuine interest in something."
+],
+
+[
+"Problem solving",
+"How thoughtfully they respond to setbacks, obstacles, and mistakes."
+],
+
+[
+"Creativity",
+"Original ideas, flexible thinking, and interesting perspectives."
+],
+
+[
+"Team fit",
+"Likelihood of contributing positively and working well with teammates."
+],
+
+[
+"Communication",
+"Clarity, specificity, listening, and ability to explain their thinking."
+]
+
 ];
 
-var STATUSES = [
-  "New",
-  "Interviewed",
-  "Callback",
-  "Accepted",
-  "Waitlisted",
-  "Not Selected"
-];
-
-/* ============================================================
-   STORAGE
-============================================================ */
-
-var STORAGE_KEY = "sciOlyApplicants_v1";
-var META_KEY = "sciOlyMeta_v1";
-var DRAFT_KEY = "sciOlyDraft_v1";
-
-var storageOK = true;
-
-function normalizeApplicant(a){
-  var base = blankApplicant();
-
-  a = a || {};
-
-  return {
-    id:
-      (typeof a.id === "string" && a.id)
-        ? a.id
-        : uid(),
-
-    name:
-      typeof a.name === "string"
-        ? a.name.trim()
-        : "",
-
-    grade:
-      typeof a.grade === "string"
-        ? a.grade
-        : "",
-
-    email:
-      typeof a.email === "string"
-        ? a.email
-        : "",
-
-    notes:
-      Object.assign(
-        {},
-        base.notes,
-        (a.notes && typeof a.notes === "object")
-          ? a.notes
-          : {}
-      ),
-
-    ratings:
-      Object.assign(
-        {},
-        base.ratings,
-        (a.ratings && typeof a.ratings === "object")
-          ? a.ratings
-          : {}
-      ),
-
-    overallNotes:
-      typeof a.overallNotes === "string"
-        ? a.overallNotes
-        : "",
-
-    status:
-      STATUSES.indexOf(a.status) > -1
-        ? a.status
-        : (
-            a.completed
-              ? "Interviewed"
-              : "New"
-          ),
-
-    createdAt:
-      typeof a.createdAt === "number"
-        ? a.createdAt
-        : Date.now(),
-
-    updatedAt:
-      typeof a.updatedAt === "number"
-        ? a.updatedAt
-        : (
-            typeof a.createdAt === "number"
-              ? a.createdAt
-              : Date.now()
-          )
-  };
-}
-
-function loadApplicants(){
-  try{
-    var raw = window.localStorage.getItem(STORAGE_KEY);
-
-    if(!raw){
-      return [];
-    }
-
-    var parsed = JSON.parse(raw);
-
-    if(!Array.isArray(parsed)){
-      return [];
-    }
-
-    return parsed
-      .map(normalizeApplicant)
-      .filter(function(a){
-        return a.name.trim().length > 0;
-      });
-
-  }catch(e){
-    storageOK = false;
-    return [];
-  }
-}
-
-function saveApplicants(){
-  try{
-    window.localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify(applicants)
-    );
-
-    storageOK = true;
-    return true;
-
-  }catch(e){
-
-    storageOK = false;
-
-    showToast(
-      "Couldn't save — browser storage may be blocked or full. Export a backup now."
-    );
-
-    return false;
-  }
-}
-
-function loadMeta(){
-  try{
-    var raw =
-      window.localStorage.getItem(META_KEY);
-
-    return raw ? JSON.parse(raw) : {};
-
-  }catch(e){
-    return {};
-  }
-}
-
-function saveMeta(m){
-  try{
-    window.localStorage.setItem(
-      META_KEY,
-      JSON.stringify(m)
-    );
-  }catch(e){}
-}
-
-function loadDraft(){
-  try{
-    var raw =
-      window.localStorage.getItem(DRAFT_KEY);
-
-    return raw ? JSON.parse(raw) : null;
-
-  }catch(e){
-    return null;
-  }
-}
-
-function saveDraft(d){
-  try{
-    window.localStorage.setItem(
-      DRAFT_KEY,
-      JSON.stringify(d)
-    );
-  }catch(e){}
-}
-
-function clearDraft(){
-  try{
-    window.localStorage.removeItem(DRAFT_KEY);
-  }catch(e){}
-}
-
-/* ============================================================
-   STATE
-============================================================ */
-
-var applicants = loadApplicants();
-var meta = loadMeta();
-
-var view = "dashboard";
-
-var wizard = null;
-
-var detailId = null;
-
-var roster = {
-  search:"",
-  status:"All",
-  sort:"date-desc"
+let db = {
+  applicants:[]
 };
 
-var pendingResumeDraft = loadDraft();
+let storageMode = "IndexedDB";
+let page = "dashboard";
+let current = null;
 
-/* ============================================================
-   UTILITIES
-============================================================ */
+
+/* =========================
+   UTILITY FUNCTIONS
+========================= */
 
 function uid(){
-  return (
-    "a_" +
-    Date.now().toString(36) +
-    "_" +
-    Math.random().toString(36).slice(2,9)
+
+  if(window.crypto && crypto.randomUUID){
+    return crypto.randomUUID();
+  }
+
+  return "a-" +
+    Date.now() +
+    "-" +
+    Math.random().toString(16).slice(2);
+
+}
+
+
+function esc(v){
+
+  return String(v ?? "").replace(
+    /[&<>"']/g,
+    c => ({
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#39;"
+    }[c])
   );
+
 }
 
-function escapeHtml(str){
 
-  if(
-    str === undefined ||
-    str === null
-  ){
-    return "";
+function clone(v){
+
+  return JSON.parse(JSON.stringify(v));
+
+}
+
+
+function ratingAverage(a){
+
+  const values =
+    Object.values(a.ratings || {})
+      .map(Number)
+      .filter(n => n >= 1 && n <= 5);
+
+  if(!values.length){
+    return 0;
   }
-
-  return String(str)
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#39;");
-}
-
-function fmtDate(ts){
-
-  if(!ts){
-    return "—";
-  }
-
-  var d = new Date(ts);
-
-  var months = [
-    "Jan","Feb","Mar","Apr","May","Jun",
-    "Jul","Aug","Sep","Oct","Nov","Dec"
-  ];
-
-  return (
-    months[d.getMonth()] +
-    " " +
-    d.getDate() +
-    ", " +
-    d.getFullYear()
-  );
-}
-
-function daysSince(ts){
-
-  if(!ts){
-    return null;
-  }
-
-  return Math.floor(
-    (Date.now() - ts) / 86400000
-  );
-}
-
-function blankApplicant(){
-
-  return {
-    id:null,
-    name:"",
-    grade:"",
-    email:"",
-    notes:{
-      q1:"",
-      q2:"",
-      q3:"",
-      q4:"",
-      q5:""
-    },
-    ratings:{
-      passion:0,
-      communication:0,
-      resilience:0,
-      creativity:0,
-      teamfit:0
-    },
-    overallNotes:"",
-    status:"New",
-    createdAt:null,
-    updatedAt:null
-  };
-}
-
-function scoreOf(a){
-
-  var vals =
-    RATING_CATEGORIES
-      .map(function(c){
-        return Number(
-          a.ratings &&
-          a.ratings[c.id]
-        ) || 0;
-      })
-      .filter(function(v){
-        return v > 0;
-      });
-
-  if(vals.length === 0){
-    return null;
-  }
-
-  var sum =
-    vals.reduce(
-      function(s,v){
-        return s + v;
-      },
-      0
-    );
 
   return Math.round(
-    (sum / vals.length) * 10
+    values.reduce((x,y)=>x+y,0) /
+    values.length *
+    10
   ) / 10;
+
 }
 
-var toastTimer = null;
 
-function showToast(msg){
+function ratingsCount(a){
 
-  var t =
-    document.getElementById("toast");
+  return Object
+    .values(a.ratings || {})
+    .filter(n => Number(n) >= 1 && Number(n) <= 5)
+    .length;
 
-  t.textContent = msg;
+}
 
-  t.classList.remove("hidden");
 
-  if(toastTimer){
-    clearTimeout(toastTimer);
+function status(a){
+
+  return a.completed
+    ? "Complete"
+    : "In progress";
+
+}
+
+
+function dateText(ts){
+
+  if(!ts){
+    return "\u2014";
   }
 
-  toastTimer =
-    setTimeout(function(){
-      t.classList.add("hidden");
-    },3200);
-}
+  try{
 
-/* ============================================================
-   ICONS
-============================================================ */
+    return new Date(ts).toLocaleString(
+      [],
+      {
+        dateStyle:"medium",
+        timeStyle:"short"
+      }
+    );
 
-function icon(name){
+  }catch{
 
-  var icons = {
+    return "\u2014";
 
-    dashboard:
-      '<svg viewBox="0 0 20 20" fill="currentColor"><path d="M3 10.2L10 3l7 7.2v6.3a.5.5 0 01-.5.5H12v-5H8v5H3.5a.5.5 0 01-.5-.5v-6.3z"/></svg>',
-
-    interview:
-      '<svg viewBox="0 0 20 20" fill="currentColor"><path d="M4 3h12a1 1 0 011 1v9a1 1 0 01-1 1H8l-4 3v-3H4a1 1 0 01-1-1V4a1 1 0 011-1z"/></svg>',
-
-    roster:
-      '<svg viewBox="0 0 20 20" fill="currentColor"><path d="M4 4h12v2H4V4zm0 5h12v2H4V9zm0 5h8v2H4v-2z"/></svg>',
-
-    guide:
-      '<svg viewBox="0 0 20 20" fill="currentColor"><path d="M4 3h9a2 2 0 012 2v11a1 1 0 01-1.45.9L10 15l-3.55 1.9A1 1 0 015 16V5a2 2 0 01-1-2z"/></svg>',
-
-    data:
-      '<svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 3c3.87 0 7 1.12 7 2.5S13.87 8 10 8s-7-1.12-7-2.5S6.13 3 6.13 3zm-7 4.4C3 8.8 6.13 10 10 10s7-1.2 7-2.6v3.1c0 1.4-3.13 2.5-7 2.5s-7-1.1-7-2.5V7.4zm0 5.5c0 1.4 3.13 2.5 7 2.5s7-1.1 7-2.5v3.1c0 1.4-3.13 2.5-7 2.5s-7-1.1-7-2.5v-3.1z"/></svg>'
-  };
-
-  return icons[name] || "";
-}
-
-/* ============================================================
-   NAV
-============================================================ */
-
-var NAV_ITEMS = [
-  {
-    id:"dashboard",
-    label:"Dashboard",
-    icon:"dashboard"
-  },
-  {
-    id:"new-interview",
-    label:"New Interview",
-    icon:"interview"
-  },
-  {
-    id:"roster",
-    label:"Applicants",
-    icon:"roster"
-  },
-  {
-    id:"guide",
-    label:"Interview Guide",
-    icon:"guide"
-  },
-  {
-    id:"data",
-    label:"Backups & Data",
-    icon:"data"
   }
-];
 
-function renderNav(){
+}
 
-  var html =
-    NAV_ITEMS
-      .map(function(item){
 
-        var activeClass =
-          view === item.id
-            ? " active"
-            : "";
+function toast(message){
 
-        return (
-          '<button type="button" ' +
-          'class="nav-btn' +
-          activeClass +
-          '" ' +
-          'data-action="nav" ' +
-          'data-view="' +
-          item.id +
-          '">' +
-          icon(item.icon) +
-          "<span>" +
-          item.label +
-          "</span>" +
-          "</button>"
+  const old =
+    document.querySelector(".toast");
+
+  if(old){
+    old.remove();
+  }
+
+  const t =
+    document.createElement("div");
+
+  t.className = "toast";
+  t.textContent = message;
+
+  document.body.appendChild(t);
+
+  setTimeout(
+    ()=>t.remove(),
+    2600
+  );
+
+}
+
+
+/* =========================
+   INDEXED DB
+========================= */
+
+function openIDB(){
+
+  return new Promise((resolve,reject)=>{
+
+    if(!("indexedDB" in window)){
+      reject(
+        new Error("IndexedDB unavailable")
+      );
+      return;
+    }
+
+    const request =
+      indexedDB.open(
+        DB_NAME,
+        DB_VERSION
+      );
+
+    request.onupgradeneeded = ()=>{
+
+      if(
+        !request.result.objectStoreNames
+          .contains(STORE)
+      ){
+
+        request.result.createObjectStore(
+          STORE,
+          {keyPath:"id"}
         );
 
-      })
-      .join("");
+      }
 
-  document.getElementById(
-    "navList"
-  ).innerHTML = html;
-}
+    };
 
-/* ============================================================
-   ROOT RENDER
-============================================================ */
+    request.onsuccess =
+      ()=>resolve(request.result);
 
-function render(){
-
-  renderNav();
-
-  var main =
-    document.getElementById("main");
-
-  if(view === "dashboard"){
-    main.innerHTML =
-      renderDashboard();
-  }
-
-  else if(view === "new-interview"){
-    main.innerHTML =
-      renderWizard();
-  }
-
-  else if(view === "roster"){
-    main.innerHTML =
-      renderRosterView();
-  }
-
-  else if(view === "guide"){
-    main.innerHTML =
-      renderGuide();
-  }
-
-  else if(view === "data"){
-    main.innerHTML =
-      renderData();
-  }
-
-  else{
-    main.innerHTML =
-      renderDashboard();
-  }
-
-  if(view === "roster"){
-    updateRosterResults();
-  }
-
-  renderModal();
-
-  window.scrollTo(0,0);
-}
-
-/* ============================================================
-   DASHBOARD
-============================================================ */
-
-function renderDashboard(){
-
-  var total =
-    applicants.length;
-
-  var scored =
-    applicants
-      .map(scoreOf)
-      .filter(function(s){
-        return s !== null;
-      });
-
-  var average =
-    scored.length
-      ? Math.round(
-          (
-            scored.reduce(
-              function(s,v){
-                return s + v;
-              },
-              0
-            ) / scored.length
-          ) * 10
-        ) / 10
-      : null;
-
-  var undecided =
-    applicants.filter(function(a){
-      return (
-        a.status === "New" ||
-        a.status === "Interviewed"
+    request.onerror =
+      ()=>reject(
+        request.error ||
+        new Error("Could not open database")
       );
-    }).length;
 
-  var accepted =
-    applicants.filter(function(a){
-      return a.status === "Accepted";
-    }).length;
+  });
 
-  var draftBanner = "";
+}
 
-  if(pendingResumeDraft){
 
-    draftBanner =
-      '<div class="banner banner-accent">' +
-        "<div>" +
-          "You have an interview in progress for " +
-          "<strong>" +
-          escapeHtml(
-            pendingResumeDraft.data.name ||
-            "an applicant"
-          ) +
-          "</strong>" +
-          " that was never finished." +
-        "</div>" +
+async function idbAll(){
 
-        '<div class="btn-row">' +
+  const database =
+    await openIDB();
 
-          '<button type="button" ' +
-            'class="btn btn-primary btn-sm" ' +
-            'data-action="resume-draft">' +
-            "Resume it" +
-          "</button>" +
+  return new Promise(
+    (resolve,reject)=>{
 
-          '<button type="button" ' +
-            'class="btn btn-ghost btn-sm" ' +
-            'data-action="discard-draft">' +
-            "Discard" +
-          "</button>" +
+      const request =
+        database
+          .transaction(STORE,"readonly")
+          .objectStore(STORE)
+          .getAll();
 
-        "</div>" +
+      request.onsuccess = ()=>{
 
-      "</div>";
+        database.close();
+
+        resolve(
+          request.result || []
+        );
+
+      };
+
+      request.onerror = ()=>{
+
+        database.close();
+
+        reject(request.error);
+
+      };
+
+    }
+  );
+
+}
+
+
+async function idbPut(applicant){
+
+  const database =
+    await openIDB();
+
+  return new Promise(
+    (resolve,reject)=>{
+
+      const request =
+        database
+          .transaction(STORE,"readwrite")
+          .objectStore(STORE)
+          .put(applicant);
+
+      request.onsuccess = ()=>{
+
+        database.close();
+
+        resolve();
+
+      };
+
+      request.onerror = ()=>{
+
+        database.close();
+
+        reject(request.error);
+
+      };
+
+    }
+  );
+
+}
+
+
+async function idbDelete(id){
+
+  const database =
+    await openIDB();
+
+  return new Promise(
+    (resolve,reject)=>{
+
+      const request =
+        database
+          .transaction(STORE,"readwrite")
+          .objectStore(STORE)
+          .delete(id);
+
+      request.onsuccess = ()=>{
+
+        database.close();
+
+        resolve();
+
+      };
+
+      request.onerror = ()=>{
+
+        database.close();
+
+        reject(request.error);
+
+      };
+
+    }
+  );
+
+}
+
+
+async function idbClear(){
+
+  const database =
+    await openIDB();
+
+  return new Promise(
+    (resolve,reject)=>{
+
+      const request =
+        database
+          .transaction(STORE,"readwrite")
+          .objectStore(STORE)
+          .clear();
+
+      request.onsuccess = ()=>{
+
+        database.close();
+
+        resolve();
+
+      };
+
+      request.onerror = ()=>{
+
+        database.close();
+
+        reject(request.error);
+
+      };
+
+    }
+  );
+
+}
+
+
+/* =========================
+   FALLBACK STORAGE
+========================= */
+
+function fallbackRead(){
+
+  try{
+
+    const data =
+      JSON.parse(
+        localStorage.getItem(
+          FALLBACK_KEY
+        ) || "{}"
+      );
+
+    return Array.isArray(data.applicants)
+      ? data.applicants
+      : [];
+
+  }catch{
+
+    return [];
+
   }
 
-  var backupBanner = "";
+}
 
-  var since =
-    daysSince(meta.lastBackupAt);
+
+function fallbackWrite(){
+
+  localStorage.setItem(
+    FALLBACK_KEY,
+    JSON.stringify({
+      version:2,
+      applicants:db.applicants
+    })
+  );
+
+}
+
+
+/* =========================
+   LOAD / SAVE
+========================= */
+
+async function loadData(){
+
+  try{
+
+    const list =
+      await idbAll();
+
+    storageMode =
+      "IndexedDB";
+
+    db.applicants =
+      list.sort(
+        (a,b)=>
+          (a.updatedAt || 0) -
+          (b.updatedAt || 0)
+      );
+
+  }catch{
+
+    storageMode =
+      "localStorage fallback";
+
+    db.applicants =
+      fallbackRead();
+
+  }
+
+}
+
+
+async function persist(applicant){
+
+  applicant.updatedAt =
+    Date.now();
+
+  if(storageMode === "IndexedDB"){
+
+    try{
+
+      await idbPut(applicant);
+
+      return true;
+
+    }catch{
+
+      storageMode =
+        "localStorage fallback";
+
+    }
+
+  }
+
+  try{
+
+    fallbackWrite();
+
+    return true;
+
+  }catch{
+
+    return false;
+
+  }
+
+}
+
+
+async function removeApplicant(id){
+
+  if(storageMode === "IndexedDB"){
+
+    try{
+
+      await idbDelete(id);
+
+      db.applicants =
+        db.applicants.filter(
+          a => a.id !== id
+        );
+
+      return true;
+
+    }catch{
+
+      storageMode =
+        "localStorage fallback";
+
+    }
+
+  }
+
+  db.applicants =
+    db.applicants.filter(
+      a => a.id !== id
+    );
+
+  try{
+
+    fallbackWrite();
+
+    return true;
+
+  }catch{
+
+    return false;
+
+  }
+
+}
+
+
+async function replaceAll(list){
+
+  if(storageMode === "IndexedDB"){
+
+    try{
+
+      await idbClear();
+
+      for(const applicant of list){
+
+        await idbPut(applicant);
+
+      }
+
+      db.applicants =
+        list;
+
+      return true;
+
+    }catch{
+
+      storageMode =
+        "localStorage fallback";
+
+    }
+
+  }
+
+  db.applicants =
+    list;
+
+  try{
+
+    fallbackWrite();
+
+    return true;
+
+  }catch{
+
+    return false;
+
+  }
+
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function go(p){
+
+  page = p;
+  current = null;
+
+  document
+    .querySelectorAll("nav button")
+    .forEach(button => {
+
+      button.classList.toggle(
+        "active",
+        button.dataset.page === p
+      );
+
+    });
+
+  render();
+
+}
+
+
+document
+  .querySelectorAll("nav button")
+  .forEach(button => {
+
+    button.addEventListener(
+      "click",
+      () => go(button.dataset.page)
+    );
+
+  });
+
+
+function header(
+  title,
+  subtitle,
+  buttons=""
+){
+
+  return `
+    <div class="top">
+
+      <div>
+
+        <h1>${title}</h1>
+
+        <div class="muted">
+          ${subtitle}
+        </div>
+
+      </div>
+
+      <div class="actions">
+        ${buttons}
+      </div>
+
+    </div>
+  `;
+
+}
+
+
+/* =========================
+   DASHBOARD
+========================= */
+
+function dashboard(main){
+
+  const total =
+    db.applicants.length;
+
+  const complete =
+    db.applicants
+      .filter(a=>a.completed)
+      .length;
+
+  const averages =
+    db.applicants
+      .map(ratingAverage)
+      .filter(Boolean);
+
+  const overall =
+    averages.length
+      ? Math.round(
+          averages.reduce(
+            (a,b)=>a+b,
+            0
+          ) /
+          averages.length *
+          10
+        ) / 10
+      : 0;
+
+  const lastBackup =
+    localStorage.getItem(
+      "sciOlyLastBackupAt"
+    );
+
+  main.innerHTML =
+
+    header(
+      "Interview HQ",
+      "Your Science Olympiad tryout command center.",
+      `
+        <button
+          class="btn primary"
+          onclick="startNew()"
+        >
+          + New applicant
+        </button>
+      `
+    )
+
+    +
+
+    `
+    <div class="grid3">
+
+      <div class="card">
+
+        <div class="muted">
+          Applicants
+        </div>
+
+        <div class="stat">
+          ${total}
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="muted">
+          Completed
+        </div>
+
+        <div class="stat">
+          ${complete}
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="muted">
+          Average rating
+        </div>
+
+        <div class="stat">
+          ${overall || "\u2014"}
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="notice ${lastBackup ? "good" : ""}">
+
+      <b>
+        ${lastBackup
+          ? "Backup status:"
+          : "First priority:"}
+      </b>
+
+      ${
+        lastBackup
+        ?
+        `Last JSON backup recorded
+         ${esc(dateText(Number(lastBackup)))}.`
+        :
+        `Make a JSON backup after your
+         first few interviews and at the
+         end of every session.`
+      }
+
+      <button
+        class="btn small"
+        onclick="go('data')"
+        style="margin-left:8px"
+      >
+        Backup & Data
+      </button>
+
+    </div>
+
+
+    <div class="grid2">
+
+      <div class="card">
+
+        <h2>Quick start</h2>
+
+        <ol>
+
+          <li>
+            Click <b>New applicant</b>.
+          </li>
+
+          <li>
+            Enter the applicant's name.
+          </li>
+
+          <li>
+            Ask the five required questions.
+          </li>
+
+          <li>
+            Write specific notes instead
+            of relying on memory.
+          </li>
+
+          <li>
+            Rate each category using
+            evidence from the interview.
+          </li>
+
+          <li>
+            Mark the interview complete
+            and save.
+          </li>
+
+          <li>
+            Export a backup before you
+            leave the device.
+          </li>
+
+        </ol>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Important data rule</h2>
+
+        <p>
+          The website code can safely live
+          on GitHub Pages, but
+          <b>applicant data should never be
+          committed to GitHub.</b>
+        </p>
+
+        <p>
+          This app keeps records in the
+          browser's IndexedDB. Browser data
+          can still be erased by device
+          resets, account changes, or
+          school policies.
+        </p>
+
+        <button
+          class="btn good"
+          onclick="go('data')"
+        >
+          Open data safety guide &rarr;
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div
+      class="card"
+      style="margin-top:14px"
+    >
+
+      <h2>Recent applicants</h2>
+
+      ${recentHTML()}
+
+    </div>
+    `;
+
+}
+
+
+function recentHTML(){
+
+  const list =
+    db.applicants
+      .slice()
+      .sort(
+        (a,b)=>
+          (b.updatedAt || 0) -
+          (a.updatedAt || 0)
+      )
+      .slice(0,7);
+
+  if(!list.length){
+
+    return `
+      <div class="empty">
+        No applicants yet.
+        Start your first interview.
+      </div>
+    `;
+
+  }
+
+  return list.map(a=>`
+
+    <div class="applicant">
+
+      <div>
+
+        <b>
+          ${esc(a.name)}
+        </b>
+
+        <div class="muted">
+
+          ${esc(a.grade || "No grade")}
+          &bull;
+          ${status(a)}
+          &bull;
+          Updated
+          ${esc(dateText(a.updatedAt))}
+
+        </div>
+
+      </div>
+
+      <div class="actions">
+
+        <span
+          class="pill ${a.completed ? "good" : "warn"}"
+        >
+          ${ratingAverage(a) || "\u2014"}/5
+        </span>
+
+        <button
+          class="btn small"
+          onclick="editApplicant('${a.id}')"
+        >
+          Open
+        </button>
+
+      </div>
+
+    </div>
+
+  `).join("");
+
+}
+
+
+/* =========================
+   NEW INTERVIEW
+========================= */
+
+function startNew(){
+
+  current = {
+
+    id:uid(),
+
+    name:"",
+
+    grade:"",
+
+    answers:Array(5).fill(""),
+
+    ratings:{},
+
+    notes:"",
+
+    completed:false,
+
+    createdAt:Date.now(),
+
+    updatedAt:Date.now()
+
+  };
+
+  page = "interview";
+
+  document
+    .querySelectorAll("nav button")
+    .forEach(button =>
+      button.classList.toggle(
+        "active",
+        button.dataset.page === "interview"
+      )
+    );
+
+  render();
+
+}
+
+
+function editApplicant(id){
+
+  const applicant =
+    db.applicants.find(
+      a=>a.id === id
+    );
+
+  if(!applicant){
+    return;
+  }
+
+  current =
+    clone(applicant);
+
+  page = "interview";
+
+  document
+    .querySelectorAll("nav button")
+    .forEach(button =>
+      button.classList.toggle(
+        "active",
+        button.dataset.page === "interview"
+      )
+    );
+
+  render();
+
+}
+
+
+/* =========================
+   INTERVIEW PAGE
+========================= */
+
+function interview(main){
+
+  if(!current){
+
+    startNew();
+
+    return;
+
+  }
+
+  main.innerHTML =
+
+    header(
+      current.name
+        ? `Interview: ${esc(current.name)}`
+        : "New Interview",
+
+      "Your work is saved when you press Save. Use the backup page for an independent copy.",
+
+      `
+        <button
+          class="btn"
+          onclick="go('applicants')"
+        >
+          Back to applicants
+        </button>
+      `
+    )
+
+    +
+
+    `
+    <div class="stepper">
+
+      <span class="active">
+        <b>1</b>
+        Applicant
+      </span>
+
+      <span>&rarr;</span>
+
+      <span>
+        <b>2</b>
+        Questions
+      </span>
+
+      <span>&rarr;</span>
+
+      <span>
+        <b>3</b>
+        Ratings
+      </span>
+
+      <span>&rarr;</span>
+
+      <span>
+        <b>4</b>
+        Finish
+      </span>
+
+    </div>
+
+
+    <div class="card">
+
+      <h2>
+        1. Applicant information
+      </h2>
+
+
+      <label for="nm">
+        Applicant name *
+      </label>
+
+      <input
+        id="nm"
+        value="${esc(current.name)}"
+        placeholder="First and last name"
+        autocomplete="off"
+      >
+
+
+      <label for="gr">
+        Grade / team information
+      </label>
+
+      <input
+        id="gr"
+        value="${esc(current.grade)}"
+        placeholder="Example: 10th grade"
+      >
+
+
+      <hr>
+
+
+      <h2>
+        2. Ask the five required questions
+      </h2>
+
+      <p class="muted">
+
+        Ask the exact same core questions
+        for every applicant. Follow-up
+        questions are optional; keep them
+        neutral and fair.
+
+      </p>
+
+
+      ${
+        QUESTIONS.map((question,index)=>`
+
+          <div class="question">
+
+            <span class="pill">
+              Question ${index + 1}
+            </span>
+
+            <div class="qtext">
+              ${question}
+            </div>
+
+            <label for="q${index}">
+              Answer / interview notes
+            </label>
+
+            <textarea
+              id="q${index}"
+              placeholder="Capture their answer, specific examples, and useful observations..."
+            >${esc(current.answers[index] || "")}</textarea>
+
+          </div>
+
+        `).join("")
+      }
+
+
+      <h2>
+        3. Rate the applicant
+      </h2>
+
+      <p class="muted">
+
+        Use 1&ndash;5. A rating should be based
+        on evidence from the interview,
+        not popularity, hobbies, or first
+        impressions.
+
+      </p>
+
+
+      <div>
+
+        ${
+          RATINGS.map((rating,index)=>`
+
+            <div class="score-row">
+
+              <div>
+
+                <b>
+                  ${rating[0]}
+                </b>
+
+                <div class="muted">
+                  ${rating[1]}
+                </div>
+
+              </div>
+
+
+              <div
+                class="stars"
+                aria-label="${rating[0]} rating"
+              >
+
+                ${
+                  [1,2,3,4,5].map(number=>`
+
+                    <button
+                      type="button"
+                      class="${
+                        Number(current.ratings[index]) >= number
+                        ? "on"
+                        : ""
+                      }"
+                      onclick="
+                        setRating(${index},${number})
+                      "
+                      aria-label="${number} out of 5"
+                    >
+                      &#9733;
+                    </button>
+
+                  `).join("")
+                }
+
+              </div>
+
+            </div>
+
+          `).join("")
+        }
+
+      </div>
+
+
+      <div
+        class="notice"
+        id="ratingSummary"
+        style="margin-top:15px"
+      >
+
+        <b>
+          Current average:
+        </b>
+
+        ${ratingAverage(current) || "\u2014"}
+        / 5
+
+        &nbsp;
+
+        <span class="muted">
+
+          (${ratingsCount(current)}/6
+          categories rated)
+
+        </span>
+
+      </div>
+
+
+      <h2>
+        4. Final notes
+      </h2>
+
+
+      <label for="notes">
+        Overall notes
+      </label>
+
+      <textarea
+        id="notes"
+        placeholder="What should the selection team remember? Record evidence, strengths, concerns, and follow-up items."
+      >${esc(current.notes || "")}</textarea>
+
+
+      <div
+        class="actions"
+        style="margin-top:16px"
+      >
+
+        <button
+          class="btn primary"
+          onclick="saveInterview(false)"
+        >
+          Save
+        </button>
+
+
+        <button
+          class="btn good"
+          onclick="saveInterview(true)"
+        >
+          ${
+            current.completed
+            ? "Keep complete"
+            : "Mark complete & save"
+          }
+        </button>
+
+
+        ${
+          current.name
+          ?
+          `
+            <button
+              class="btn danger"
+              onclick="deleteCurrent()"
+            >
+              Delete applicant
+            </button>
+          `
+          :
+          ""
+        }
+
+      </div>
+
+    </div>
+    `;
+
+}
+
+
+function setRating(index,number){
+
+  current.ratings[index] =
+    number;
+
+  const rows =
+    document.querySelectorAll(
+      ".score-row"
+    );
+
+  if(rows[index]){
+
+    rows[index]
+      .querySelectorAll("button")
+      .forEach(
+        (button,position)=>{
+          button.classList.toggle(
+            "on",
+            position < number
+          );
+        }
+      );
+
+  }
+
+  const summary =
+    document.getElementById(
+      "ratingSummary"
+    );
+
+  if(summary){
+
+    summary.innerHTML = `
+
+      <b>
+        Current average:
+      </b>
+
+      ${ratingAverage(current) || "\u2014"}
+      / 5
+
+      &nbsp;
+
+      <span class="muted">
+
+        (${ratingsCount(current)}/6
+        categories rated)
+
+      </span>
+
+    `;
+
+  }
+
+}
+
+
+async function saveInterview(markComplete){
+
+  const name =
+    document
+      .getElementById("nm")
+      .value
+      .trim();
+
+  if(!name){
+
+    alert(
+      "Please enter the applicant's name."
+    );
+
+    document
+      .getElementById("nm")
+      .focus();
+
+    return false;
+
+  }
+
+  current.name = name;
+
+  current.grade =
+    document
+      .getElementById("gr")
+      .value
+      .trim();
+
+  current.answers =
+    QUESTIONS.map(
+      (_,index)=>
+        document
+          .getElementById("q"+index)
+          .value
+    );
+
+  current.notes =
+    document
+      .getElementById("notes")
+      .value;
+
+  if(markComplete){
+
+    current.completed =
+      true;
+
+  }
+
+  current.updatedAt =
+    Date.now();
+
+  const saved =
+    await persist(current);
 
   if(
-    total > 0 &&
-    (
-      since === null ||
-      since >= 7
+    !db.applicants.some(
+      a=>a.id === current.id
     )
   ){
 
-    var message =
-      since === null
-        ? "You've never exported a backup."
-        : "It's been " +
-          since +
-          " days since your last backup.";
-
-    backupBanner =
-      '<div class="banner banner-warn">' +
-        "<div>" +
-          message +
-          " If this Chromebook clears its browser data, everything here could disappear." +
-        "</div>" +
-
-        '<button type="button" ' +
-          'class="btn btn-primary btn-sm" ' +
-          'data-action="nav" ' +
-          'data-view="data">' +
-          "Back up now" +
-        "</button>" +
-
-      "</div>";
-  }
-
-  var recentHtml = "";
-
-  if(total === 0){
-
-    recentHtml =
-      '<div class="empty-state">' +
-        "<h3>No applicants yet</h3>" +
-        "<p>Run your first interview and it will show up here.</p>" +
-
-        '<div class="btn-row" ' +
-          'style="justify-content:center;margin-top:14px;">' +
-
-          '<button type="button" ' +
-            'class="btn btn-primary" ' +
-            'data-action="start-interview">' +
-            "Start a new interview" +
-          "</button>" +
-
-        "</div>" +
-
-      "</div>";
+    db.applicants.push(
+      clone(current)
+    );
 
   }else{
 
-    var recent =
-      applicants
-        .slice()
-        .sort(function(a,b){
-          return (
-            (b.createdAt || 0) -
-            (a.createdAt || 0)
-          );
-        })
-        .slice(0,5);
+    db.applicants =
+      db.applicants.map(
+        a =>
+          a.id === current.id
+          ? clone(current)
+          : a
+      );
 
-    recentHtml =
-      '<div class="roster-grid">' +
-        recent
-          .map(applicantCardHtml)
-          .join("") +
-      "</div>";
   }
 
-  return (
+  if(saved){
 
-    '<div class="view-head">' +
+    toast(
+      markComplete
+        ? "Applicant marked complete and saved."
+        : "Applicant saved."
+    );
 
-      '<div class="view-eyebrow">' +
-        "SCIENCE OLYMPIAD" +
-      "</div>" +
+    if(markComplete){
 
-      '<h1 class="view-title">' +
-        "Dashboard" +
-      "</h1>" +
+      go("applicants");
 
-      '<p class="view-sub">' +
-        "A simple place to run interviews, keep notes, and compare applicants." +
-      "</p>" +
+    }
 
-    "</div>" +
+  }else{
 
-    draftBanner +
-    backupBanner +
+    alert(
+      "The browser could not save this applicant. Do not close this page. Use Backup & Data immediately and contact your school administrator if storage is restricted."
+    );
 
-    '<div class="stat-grid">' +
+  }
 
-      '<div class="stat">' +
-        '<div class="stat-label">Applicants</div>' +
-        '<div class="stat-value">' +
-          total +
-        "</div>" +
-      "</div>" +
+  return saved;
 
-      '<div class="stat">' +
-        '<div class="stat-label">Average score</div>' +
-        '<div class="stat-value">' +
-          (
-            average === null
-              ? "—"
-              : average.toFixed(1)
-          ) +
-        "</div>" +
-      "</div>" +
-
-      '<div class="stat">' +
-        '<div class="stat-label">Undecided</div>' +
-        '<div class="stat-value">' +
-          undecided +
-        "</div>" +
-      "</div>" +
-
-      '<div class="stat">' +
-        '<div class="stat-label">Accepted</div>' +
-        '<div class="stat-value">' +
-          accepted +
-        "</div>" +
-      "</div>" +
-
-    "</div>" +
-
-    '<div class="dashboard-grid">' +
-
-      '<div class="card">' +
-
-        '<div class="btn-row" style="justify-content:space-between;margin-bottom:15px;">' +
-
-          '<div>' +
-            '<h3 class="recent-title">Recent applicants</h3>' +
-          "</div>" +
-
-          '<button type="button" ' +
-            'class="btn btn-ghost btn-sm" ' +
-            'data-action="nav" ' +
-            'data-view="roster">' +
-            "View all" +
-          "</button>" +
-
-        "</div>" +
-
-        recentHtml +
-
-      "</div>" +
-
-      '<div class="card quick-card">' +
-
-        '<div class="step-kicker">QUICK START</div>' +
-
-        "<h3 style=\"font-size:18px;margin-bottom:8px;\">" +
-          "Run an interview" +
-        "</h3>" +
-
-        "<p class=\"muted\">" +
-          "Enter the applicant, work through the questions, rate the interview, and save the record." +
-        "</p>" +
-
-        '<button type="button" ' +
-          'class="btn btn-primary" ' +
-          'data-action="start-interview">' +
-          "+ New interview" +
-        "</button>" +
-
-      "</div>" +
-
-    "</div>"
-  );
 }
 
-/* ============================================================
-   APPLICANT CARD
-============================================================ */
 
-function applicantCardHtml(a){
+async function deleteCurrent(){
 
-  var score =
-    scoreOf(a);
+  if(
+    !current ||
+    !confirm(
+      `Delete ${current.name || "this applicant"}? This cannot be undone unless you have a backup.`
+    )
+  ){
 
-  return (
+    return;
 
-    '<div class="applicant-card" ' +
-      'data-action="open-detail" ' +
-      'data-id="' +
-      escapeHtml(a.id) +
-      '">' +
+  }
 
-      '<div class="applicant-card-top">' +
-
-        "<div>" +
-
-          '<div class="applicant-name">' +
-            escapeHtml(a.name) +
-          "</div>" +
-
-          '<div class="applicant-meta">' +
-
-            (
-              a.grade
-                ? "Grade " +
-                  escapeHtml(a.grade)
-                : ""
-            ) +
-
-            (
-              a.email
-                ? " · " +
-                  escapeHtml(a.email)
-                : ""
-            ) +
-
-          "</div>" +
-
-        "</div>" +
-
-        '<div class="applicant-score">' +
-          (
-            score === null
-              ? "—"
-              : score.toFixed(1) +
-                " / 5"
-          ) +
-        "</div>" +
-
-      "</div>" +
-
-      '<div style="margin-top:12px;">' +
-
-        '<span class="badge badge-' +
-          escapeHtml(
-            a.status.replace(/\s+/g,"-")
-          ) +
-        '">' +
-          escapeHtml(a.status) +
-        "</span>" +
-
-      "</div>" +
-
-    "</div>"
+  await removeApplicant(
+    current.id
   );
+
+  current = null;
+
+  go("applicants");
+
 }
 
-/* ============================================================
-   WIZARD
-============================================================ */
 
-function startWizard(existing){
+/* =========================
+   APPLICANTS
+========================= */
 
-  if(existing){
+function applicants(main){
 
-    wizard = {
-      editingId:existing.id,
-      step:0,
-      data:JSON.parse(
-        JSON.stringify(existing)
+  main.innerHTML =
+
+    header(
+      "Applicants",
+      "Search and review every interview record.",
+
+      `
+        <button
+          class="btn primary"
+          onclick="startNew()"
+        >
+          + New applicant
+        </button>
+      `
+    )
+
+    +
+
+    `
+    <div class="card">
+
+      <div class="grid2">
+
+        <div>
+
+          <label
+            for="search"
+            style="margin-top:0"
+          >
+            Search
+          </label>
+
+          <input
+            id="search"
+            placeholder="Applicant name..."
+            oninput="filterApplicants()"
+          >
+
+        </div>
+
+
+        <div>
+
+          <label
+            for="filter"
+            style="margin-top:0"
+          >
+            Filter
+          </label>
+
+          <select
+            id="filter"
+            onchange="filterApplicants()"
+          >
+
+            <option value="all">
+              All applicants
+            </option>
+
+            <option value="complete">
+              Complete
+            </option>
+
+            <option value="progress">
+              In progress
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+
+      <div
+        id="alist"
+        style="margin-top:8px"
+      ></div>
+
+    </div>
+    `;
+
+  filterApplicants();
+
+}
+
+
+function filterApplicants(){
+
+  const query =
+    (
+      document
+        .getElementById("search")
+        ?.value ||
+      ""
+    ).toLowerCase();
+
+  const filter =
+    document
+      .getElementById("filter")
+      ?.value ||
+    "all";
+
+  let list =
+    db.applicants.filter(
+      applicant =>
+        applicant.name
+          .toLowerCase()
+          .includes(query)
+    );
+
+  if(filter === "complete"){
+
+    list =
+      list.filter(
+        applicant =>
+          applicant.completed
+      );
+
+  }
+
+  if(filter === "progress"){
+
+    list =
+      list.filter(
+        applicant =>
+          !applicant.completed
+      );
+
+  }
+
+  list.sort(
+    (a,b)=>
+      a.name.localeCompare(
+        b.name
       )
-    };
-
-  }else{
-
-    wizard = {
-      editingId:null,
-      step:0,
-      data:blankApplicant()
-    };
-
-  }
-
-  saveDraft(wizard);
-
-  pendingResumeDraft = null;
-
-  view = "new-interview";
-}
-
-var WIZARD_TOTAL_STEPS =
-  2 + QUESTIONS.length;
-
-function renderWizard(){
-
-  if(!wizard){
-    startWizard(null);
-  }
-
-  var step =
-    wizard.step;
-
-  var dots = "";
-
-  for(
-    var i=0;
-    i<WIZARD_TOTAL_STEPS;
-    i++
-  ){
-
-    var cls =
-      i < step
-        ? "done"
-        : (
-            i === step
-              ? "current"
-              : ""
-          );
-
-    dots +=
-      '<div class="wizard-dot ' +
-      cls +
-      '"></div>';
-  }
-
-  var body = "";
-
-  if(step === 0){
-    body = wizardStepInfo();
-  }
-
-  else if(
-    step >= 1 &&
-    step <= QUESTIONS.length
-  ){
-    body =
-      wizardStepQuestion(
-        QUESTIONS[step - 1]
-      );
-  }
-
-  else{
-    body =
-      wizardStepRatings();
-  }
-
-  var isFirst =
-    step === 0;
-
-  var isLast =
-    step ===
-    WIZARD_TOTAL_STEPS - 1;
-
-  return (
-
-    '<div class="view-head">' +
-
-      '<div class="view-eyebrow">' +
-        (
-          wizard.editingId
-            ? "EDITING RECORD"
-            : "NEW RECORD"
-        ) +
-      "</div>" +
-
-      '<h1 class="view-title">' +
-        (
-          wizard.editingId
-            ? "Edit interview"
-            : "New interview"
-        ) +
-      "</h1>" +
-
-      '<p class="view-sub">' +
-        "Step " +
-        (step + 1) +
-        " of " +
-        WIZARD_TOTAL_STEPS +
-        ". Your answers are saved automatically as you go." +
-      "</p>" +
-
-    "</div>" +
-
-    '<div class="wizard-progress">' +
-      dots +
-    "</div>" +
-
-    '<div class="card" style="max-width:720px;">' +
-      body +
-    "</div>" +
-
-    '<div class="btn-row">' +
-
-      (
-        isFirst
-
-          ? '<button type="button" ' +
-              'class="btn btn-ghost" ' +
-              'data-action="cancel-wizard">' +
-              "Cancel" +
-            "</button>"
-
-          : '<button type="button" ' +
-              'class="btn btn-ghost" ' +
-              'data-action="wizard-back">' +
-              "Back" +
-            "</button>"
-      ) +
-
-      (
-        isLast
-
-          ? '<button type="button" ' +
-              'class="btn btn-primary" ' +
-              'data-action="wizard-save">' +
-              "Save applicant" +
-            "</button>"
-
-          : '<button type="button" ' +
-              'class="btn btn-primary" ' +
-              'data-action="wizard-next">' +
-              "Next" +
-            "</button>"
-      ) +
-
-    "</div>"
   );
-}
 
-function wizardStepInfo(){
-
-  var d =
-    wizard.data;
-
-  return (
-
-    '<div class="step-kicker">' +
-      "BEFORE YOU START" +
-    "</div>" +
-
-    '<h2 style="font-size:20px;margin-bottom:16px;">' +
-      "Who are you interviewing?" +
-    "</h2>" +
-
-    '<div class="field">' +
-      '<label for="w-name">Full name</label>' +
-
-      '<input ' +
-        'type="text" ' +
-        'id="w-name" ' +
-        'data-bind="name" ' +
-        'placeholder="e.g. Jordan Lee" ' +
-        'value="' +
-        escapeHtml(d.name) +
-      '">' +
-
-    "</div>" +
-
-    '<div class="grid-2">' +
-
-      '<div class="field">' +
-        '<label for="w-grade">Grade</label>' +
-
-        '<input ' +
-          'type="text" ' +
-          'id="w-grade" ' +
-          'data-bind="grade" ' +
-          'placeholder="e.g. 9th" ' +
-          'value="' +
-          escapeHtml(d.grade) +
-        '">' +
-
-      "</div>" +
-
-      '<div class="field">' +
-        '<label for="w-email">Email (optional)</label>' +
-
-        '<input ' +
-          'type="text" ' +
-          'id="w-email" ' +
-          'data-bind="email" ' +
-          'placeholder="e.g. jordan@example.com" ' +
-          'value="' +
-          escapeHtml(d.email) +
-        '">' +
-
-      "</div>" +
-
-    "</div>" +
-
-    '<div class="field">' +
-      '<label for="w-status">Status</label>' +
-
-      '<select ' +
-        'id="w-status" ' +
-        'data-bind="status" ' +
-        'class="status-select">' +
-
-        STATUSES
-          .map(function(status){
-            return (
-              '<option value="' +
-              escapeHtml(status) +
-              '"' +
-              (
-                d.status === status
-                  ? " selected"
-                  : ""
-              ) +
-              ">" +
-              escapeHtml(status) +
-              "</option>"
-            );
-          })
-          .join("") +
-
-      "</select>" +
-
-    "</div>" +
-
-    '<div class="info-box">' +
-      "<strong>Tip:</strong> " +
-      "You can move through the interview one question at a time. Your work is saved as a draft automatically." +
-    "</div>"
-  );
-}
-
-function wizardStepQuestion(q){
-
-  var answer =
-    wizard.data.notes[q.id] || "";
-
-  return (
-
-    '<div class="step-kicker">' +
-      escapeHtml(q.short) +
-    "</div>" +
-
-    '<h2 style="font-size:20px;line-height:1.35;">' +
-      escapeHtml(q.text) +
-    "</h2>" +
-
-    '<div class="question-purpose">' +
-      "<strong>What you're looking for:</strong> " +
-      escapeHtml(q.purpose) +
-    "</div>" +
-
-    '<div class="field">' +
-
-      '<label for="w-answer">' +
-        "Interview notes" +
-      "</label>" +
-
-      '<textarea ' +
-        'id="w-answer" ' +
-        'data-bind-note="' +
-        escapeHtml(q.id) +
-        '" ' +
-        'placeholder="Write down useful evidence, examples, or notable parts of the answer...">' +
-        escapeHtml(answer) +
-      "</textarea>" +
-
-    "</div>" +
-
-    '<details>' +
-
-      "<summary>What to listen for</summary>" +
-
-      "<p>" +
-        escapeHtml(q.listenFor) +
-      "</p>" +
-
-      "<strong>Good signs</strong>" +
-
-      "<ul>" +
-
-        q.green
-          .map(function(x){
-            return (
-              "<li>" +
-              escapeHtml(x) +
-              "</li>"
-            );
-          })
-          .join("") +
-
-      "</ul>" +
-
-      "<strong>Potential concerns</strong>" +
-
-      "<ul>" +
-
-        q.red
-          .map(function(x){
-            return (
-              "<li>" +
-              escapeHtml(x) +
-              "</li>"
-            );
-          })
-          .join("") +
-
-      "</ul>" +
-
-      '<p class="muted">' +
-        "<strong>Follow-up:</strong> " +
-        escapeHtml(q.followup) +
-      "</p>" +
-
-    "</details>"
-  );
-}
-
-function wizardStepRatings(){
-
-  var d =
-    wizard.data;
-
-  var html =
-    '<div class="step-kicker">' +
-      "FINAL EVALUATION" +
-    "</div>" +
-
-    '<h2 style="font-size:20px;margin-bottom:7px;">' +
-      "Rate the interview" +
-    "</h2>" +
-
-    '<p class="muted">' +
-      "Use the rubric consistently. You can leave a category unrated and return later." +
-    "</p>";
-
-  RATING_CATEGORIES.forEach(function(cat){
-
-    var value =
-      Number(
-        d.ratings[cat.id]
-      ) || 0;
-
-    html +=
-
-      '<div class="rating-row">' +
-
-        '<div class="rating-name">' +
-          escapeHtml(cat.label) +
-        "</div>" +
-
-        '<div class="rating-description">' +
-          escapeHtml(cat.description) +
-        "</div>" +
-
-        '<div class="stars">';
-
-    for(
-      var i=1;
-      i<=5;
-      i++
-    ){
-
-      html +=
-
-        '<button type="button" ' +
-          'class="star' +
-          (
-            i <= value
-              ? " active"
-              : ""
-          ) +
-          '" ' +
-          'data-action="set-rating" ' +
-          'data-cat="' +
-          escapeHtml(cat.id) +
-          '" ' +
-          'data-val="' +
-          i +
-          '">' +
-          "★" +
-        "</button>";
-    }
-
-    html +=
-        "</div>" +
-
-        '<div class="hint">' +
-          "1: " +
-          escapeHtml(cat.anchors[1]) +
-          "<br>" +
-          "3: " +
-          escapeHtml(cat.anchors[3]) +
-          "<br>" +
-          "5: " +
-          escapeHtml(cat.anchors[5]) +
-        "</div>" +
-
-      "</div>";
-  });
-
-  html +=
-
-    '<div class="field" style="margin-top:18px;">' +
-
-      '<label for="w-overall-notes">' +
-        "Overall notes" +
-      "</label>" +
-
-      '<textarea ' +
-        'id="w-overall-notes" ' +
-        'data-bind-overall ' +
-        'placeholder="Anything important to remember when comparing this applicant later...">' +
-        escapeHtml(
-          d.overallNotes || ""
-        ) +
-      "</textarea>" +
-
-    "</div>";
-
-  return html;
-}
-
-/* ============================================================
-   ROSTER
-============================================================ */
-
-function renderRosterView(){
-
-  return (
-
-    '<div class="view-head">' +
-
-      '<div class="view-eyebrow">' +
-        "ROSTER" +
-      "</div>" +
-
-      '<h1 class="view-title">' +
-        "Applicants" +
-      "</h1>" +
-
-      '<p class="view-sub">' +
-        "Search, review, compare, and edit every interview record." +
-      "</p>" +
-
-    "</div>" +
-
-    '<div class="card">' +
-
-      '<div class="roster-controls">' +
-
-        '<input ' +
-          'id="rosterSearch" ' +
-          'placeholder="Search by name or grade..." ' +
-          'value="' +
-          escapeHtml(roster.search) +
-        '">' +
-
-        '<select id="rosterSort">' +
-
-          '<option value="date-desc"' +
-            (
-              roster.sort === "date-desc"
-                ? " selected"
-                : ""
-            ) +
-          '>Newest first</option>' +
-
-          '<option value="date-asc"' +
-            (
-              roster.sort === "date-asc"
-                ? " selected"
-                : ""
-            ) +
-          '>Oldest first</option>' +
-
-          '<option value="score-desc"' +
-            (
-              roster.sort === "score-desc"
-                ? " selected"
-                : ""
-            ) +
-          '>Highest score</option>' +
-
-          '<option value="score-asc"' +
-            (
-              roster.sort === "score-asc"
-                ? " selected"
-                : ""
-            ) +
-          '>Lowest score</option>' +
-
-          '<option value="name-asc"' +
-            (
-              roster.sort === "name-asc"
-                ? " selected"
-                : ""
-            ) +
-          '>Name (A–Z)</option>' +
-
-        "</select>" +
-
-      "</div>" +
-
-      '<div class="btn-row" style="justify-content:flex-end;margin-bottom:13px;">' +
-
-        '<button type="button" ' +
-          'class="btn btn-primary btn-sm" ' +
-          'data-action="start-interview">' +
-          "+ New interview" +
-        "</button>" +
-
-      "</div>" +
-
-      '<div class="chip-row">' +
-
-        ["All"]
-          .concat(STATUSES)
-          .map(function(status){
-
-            return (
-              '<button type="button" ' +
-                'class="chip' +
-                (
-                  roster.status === status
-                    ? " active"
-                    : ""
-                ) +
-                '" ' +
-                'data-action="filter-status" ' +
-                'data-status="' +
-                escapeHtml(status) +
-                '">' +
-                escapeHtml(status) +
-              "</button>"
-            );
-
-          })
-          .join("") +
-
-      "</div>" +
-
-      '<div id="rosterResults"></div>' +
-
-    "</div>"
-  );
-}
-
-function updateRosterResults(){
-
-  var el =
+  const output =
     document.getElementById(
-      "rosterResults"
+      "alist"
     );
 
-  if(!el){
+  if(!output){
     return;
   }
 
-  var list =
-    applicants.slice();
+  output.innerHTML =
+    list.length
 
-  if(roster.status !== "All"){
+    ?
 
-    list =
-      list.filter(function(a){
-        return a.status === roster.status;
-      });
+    list.map(applicant=>`
+
+      <div class="applicant">
+
+        <div>
+
+          <b>
+            ${esc(applicant.name)}
+          </b>
+
+          <div class="muted">
+
+            ${esc(
+              applicant.grade ||
+              "No grade"
+            )}
+
+            &bull;
+
+            ${status(applicant)}
+
+            &bull;
+
+            ${ratingsCount(applicant)}/6
+            rated
+
+            &bull;
+
+            ${esc(
+              dateText(
+                applicant.updatedAt
+              )
+            )}
+
+          </div>
+
+        </div>
+
+
+        <div class="actions">
+
+          <span
+            class="pill ${
+              applicant.completed
+              ? "good"
+              : "warn"
+            }"
+          >
+            ${ratingAverage(applicant) || "\u2014"}/5
+          </span>
+
+
+          <button
+            class="btn small"
+            onclick="editApplicant('${applicant.id}')"
+          >
+            Edit
+          </button>
+
+
+          <button
+            class="btn small danger"
+            onclick="deleteById('${applicant.id}')"
+          >
+            Delete
+          </button>
+
+        </div>
+
+      </div>
+
+    `).join("")
+
+    :
+
+    `
+      <div class="empty">
+        No matching applicants.
+      </div>
+    `;
+
+}
+
+
+async function deleteById(id){
+
+  const applicant =
+    db.applicants.find(
+      a=>a.id === id
+    );
+
+  if(!applicant){
+    return;
   }
 
-  var q =
-    roster.search
-      .trim()
-      .toLowerCase();
+  if(
+    !confirm(
+      `Delete ${applicant.name}? This cannot be undone unless you have a backup.`
+    )
+  ){
 
-  if(q){
+    return;
 
-    list =
-      list.filter(function(a){
-
-        return (
-          (a.name || "")
-            .toLowerCase()
-            .indexOf(q) > -1 ||
-
-          (a.grade || "")
-            .toLowerCase()
-            .indexOf(q) > -1
-        );
-
-      });
   }
 
-  list.sort(function(a,b){
+  await removeApplicant(id);
 
-    if(roster.sort === "date-desc"){
-      return (
-        (b.createdAt || 0) -
-        (a.createdAt || 0)
-      );
-    }
+  toast(
+    "Applicant deleted."
+  );
 
-    if(roster.sort === "date-asc"){
-      return (
-        (a.createdAt || 0) -
-        (b.createdAt || 0)
-      );
-    }
+  filterApplicants();
 
-    if(roster.sort === "name-asc"){
-      return (
-        (a.name || "")
-          .localeCompare(
-            b.name || ""
+}
+
+
+/* =========================
+   IDIOT'S GUIDE
+========================= */
+
+function guide(main){
+
+  main.innerHTML =
+
+    header(
+      "Idiot's Guide to Interviewing",
+      "A no-guesswork checklist for running consistent Science Olympiad interviews."
+    )
+
+    +
+
+    `
+    <div class="grid2">
+
+      <div class="card">
+
+        <h2>
+          Before the applicant enters
+        </h2>
+
+        <ol>
+
+          <li>
+            Open <b>New Interview</b>
+            and enter the applicant's name.
+          </li>
+
+          <li>
+            Have the five core questions ready.
+          </li>
+
+          <li>
+            Make sure your browser has
+            enough battery and that the app
+            is working.
+          </li>
+
+          <li>
+            If possible, make a backup
+            before starting a large
+            interview session.
+          </li>
+
+          <li>
+            Use the same core questions
+            and rating categories for
+            everyone.
+          </li>
+
+        </ol>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>
+          While interviewing
+        </h2>
+
+        <ol>
+
+          <li>
+            Welcome the applicant and
+            explain that there are five
+            core questions.
+          </li>
+
+          <li>
+            Ask one question at a time.
+          </li>
+
+          <li>
+            Let them finish their thought
+            before writing.
+          </li>
+
+          <li>
+            Write specific evidence:
+            examples, actions, reasoning,
+            and details.
+          </li>
+
+          <li>
+            Use neutral follow-ups such
+            as &ldquo;Can you tell me more?&rdquo;
+            when needed.
+          </li>
+
+          <li>
+            Do not coach one applicant
+            into a stronger answer than
+            another.
+          </li>
+
+        </ol>
+
+      </div>
+
+    </div>
+
+
+    <div
+      class="card"
+      style="margin-top:14px"
+    >
+
+      <h2>
+        The five required questions
+      </h2>
+
+      ${
+        QUESTIONS.map(
+          (question,index)=>`
+
+            <div class="question">
+
+              <span class="pill">
+                Q${index + 1}
+              </span>
+
+              <div class="qtext">
+                ${question}
+              </div>
+
+              <p class="muted">
+
+                Write what they actually
+                said and note specific
+                evidence. Do not grade
+                an applicant simply
+                because you personally
+                like or dislike their
+                answer.
+
+              </p>
+
+            </div>
+
+          `
+        ).join("")
+      }
+
+    </div>
+
+
+    <div
+      class="grid2"
+      style="margin-top:14px"
+    >
+
+      <div class="card">
+
+        <h2>
+          How to use the 1&ndash;5 scale
+        </h2>
+
+        <p>
+          <b>1 &mdash; Major concern:</b>
+          little evidence for the category.
+        </p>
+
+        <p>
+          <b>2 &mdash; Below expectations:</b>
+          some evidence, but significant gaps.
+        </p>
+
+        <p>
+          <b>3 &mdash; Solid:</b>
+          reasonable evidence; neither a
+          major strength nor concern.
+        </p>
+
+        <p>
+          <b>4 &mdash; Strong:</b>
+          clear, convincing evidence.
+        </p>
+
+        <p>
+          <b>5 &mdash; Exceptional:</b>
+          unusually strong, specific evidence.
+        </p>
+
+        <div class="notice">
+
+          A rating is not a &ldquo;vibe.&rdquo;
+
+          Before choosing 4 or 5,
+          ask yourself:
+
+          <b>
+            What did the applicant
+            actually say or do that
+            supports this score?
+          </b>
+
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>
+          After the interview
+        </h2>
+
+        <ol>
+
+          <li>
+            Finish your notes while the
+            conversation is fresh.
+          </li>
+
+          <li>
+            Complete all six ratings
+            when you have enough evidence.
+          </li>
+
+          <li>
+            Click
+            <b>
+              Mark complete & save
+            </b>.
+          </li>
+
+          <li>
+            Move to the next applicant.
+          </li>
+
+          <li>
+            At the end of the session,
+            go to <b>Backup & Data</b>
+            and export JSON.
+          </li>
+
+        </ol>
+
+      </div>
+
+    </div>
+
+
+    <div
+      class="card"
+      style="margin-top:14px"
+    >
+
+      <h2>
+        Fairness reminders
+      </h2>
+
+
+      <details>
+
+        <summary>
+          What should I write in notes?
+        </summary>
+
+        <p>
+
+          Record interview-relevant
+          evidence: what the applicant
+          said, examples they gave,
+          how they approached a problem,
+          and questions that need
+          follow-up.
+
+        </p>
+
+      </details>
+
+
+      <details>
+
+        <summary>
+          What should I NOT use as a rating?
+        </summary>
+
+        <p>
+
+          A person's popularity,
+          appearance, unrelated
+          personal characteristics,
+          or whether their hobby happens
+          to be your hobby.
+
+          Rate the evidence relevant
+          to the categories.
+
+        </p>
+
+      </details>
+
+
+      <details>
+
+        <summary>
+          What if I do not know how to score something?
+        </summary>
+
+        <p>
+
+          Leave it unrated temporarily
+          and return after reviewing the
+          complete interview.
+
+          Do not invent evidence.
+
+        </p>
+
+      </details>
+
+    </div>
+    `;
+
+}
+
+
+/* =========================
+   BACKUP / DATA
+========================= */
+
+function dataPage(main){
+
+  const count =
+    db.applicants.length;
+
+  main.innerHTML =
+
+    header(
+      "Backup & Data",
+      "The most important page for preventing accidental data loss."
+    )
+
+    +
+
+    `
+    <div class="notice">
+
+      <b>&#9888; Critical:</b>
+
+      GitHub Pages hosts the app code.
+
+      It does <b>not</b> automatically
+      save your applicant records to
+      GitHub.
+
+      Applicant records live in this
+      browser.
+
+      School-managed devices can clear
+      browser storage, so JSON backups
+      are essential.
+
+    </div>
+
+
+    <div class="grid2">
+
+
+      <div class="card">
+
+        <h2>
+          1. Make a backup
+        </h2>
+
+        <p>
+
+          Export all ${count}
+          applicant record(s) into a JSON
+          file.
+
+          Store that file somewhere
+          private and school-approved.
+
+        </p>
+
+
+        <button
+          class="btn primary"
+          onclick="exportJSON()"
+        >
+          Download JSON backup
+        </button>
+
+
+        <p class="muted">
+
+          A backup contains names,
+          answers, notes, ratings, and
+          other applicant information.
+
+          Treat it as confidential.
+
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>
+          2. Restore a backup
+        </h2>
+
+        <p>
+
+          Choose one or more backup
+          files exported by this app.
+
+          Applicants from the file(s)
+          are merged into your current
+          records &mdash; if an applicant
+          already exists, the most
+          recently updated version is
+          kept. Nothing is erased.
+
+        </p>
+
+
+        <input
+          id="backupFile"
+          type="file"
+          accept=".json,application/json"
+          multiple
+          onchange="importJSON(event)"
+        >
+
+      </div>
+
+    </div>
+
+
+    <div
+      class="card"
+      style="margin-top:14px"
+    >
+
+      <h2>
+        Recommended safety routine
+      </h2>
+
+      <ol>
+
+        <li>
+          <b>Before interviews:</b>
+          open the app and verify the
+          Applicants count.
+        </li>
+
+        <li>
+          <b>During interviews:</b>
+          save each applicant before
+          moving on.
+        </li>
+
+        <li>
+          <b>Every session:</b>
+          export a JSON backup.
+        </li>
+
+        <li>
+          <b>After exporting:</b>
+          verify the downloaded file
+          exists before deleting anything.
+        </li>
+
+        <li>
+          <b>Moving devices:</b>
+          open the new site, then import
+          your JSON backup &mdash; you can
+          select several backup files at
+          once and they will all be
+          merged together.
+        </li>
+
+        <li>
+          <b>After restoring:</b>
+          check the applicant count and
+          open several records.
+        </li>
+
+      </ol>
+
+    </div>
+
+
+    <div
+      class="card"
+      style="margin-top:14px"
+    >
+
+      <h2>
+        Storage health
+      </h2>
+
+      <p>
+        <b>
+          Current storage method:
+        </b>
+
+        ${esc(storageMode)}
+      </p>
+
+      <p>
+        <b>
+          Applicants in browser:
+        </b>
+
+        ${count}
+      </p>
+
+      <p>
+        <b>
+          Last recorded backup:
+        </b>
+
+        ${
+          localStorage.getItem(
+            "sciOlyLastBackupAt"
           )
-      );
-    }
+          ?
+          esc(
+            dateText(
+              Number(
+                localStorage.getItem(
+                  "sciOlyLastBackupAt"
+                )
+              )
+            )
+          )
+          :
+          "No backup recorded by this app yet."
+        }
 
-    var sa = scoreOf(a);
-    var sb = scoreOf(b);
+      </p>
 
-    sa = sa === null ? -1 : sa;
-    sb = sb === null ? -1 : sb;
 
-    if(roster.sort === "score-desc"){
-      return sb - sa;
-    }
+      <div class="notice good">
 
-    if(roster.sort === "score-asc"){
-      return sa - sb;
-    }
+        The app contains no external
+        font or analytics dependency.
 
-    return 0;
-  });
+        It is designed to work as a
+        static GitHub Pages site.
 
-  if(applicants.length === 0){
+      </div>
 
-    el.innerHTML =
-      '<div class="empty-state">' +
-        "<h3>No applicants yet</h3>" +
-        "<p>Run your first interview to start building the roster.</p>" +
-      "</div>";
+    </div>
 
-    return;
-  }
 
-  if(list.length === 0){
+    <div
+      class="card danger-zone"
+      style="margin-top:14px"
+    >
 
-    el.innerHTML =
-      '<div class="empty-state">' +
-        "<h3>No matches</h3>" +
-        "<p>Try a different search term or status filter.</p>" +
-      "</div>";
+      <h2>
+        Danger zone
+      </h2>
 
-    return;
-  }
+      <p>
 
-  el.innerHTML =
-    '<div class="roster-grid">' +
-      list
-        .map(applicantCardHtml)
-        .join("") +
-    "</div>";
+        Only use this if you intentionally
+        want to erase the records in this
+        browser.
+
+        Export a backup first.
+
+      </p>
+
+      <button
+        class="btn danger"
+        onclick="eraseAll()"
+      >
+        Erase all browser records
+      </button>
+
+    </div>
+    `;
+
 }
 
-/* ============================================================
-   DETAIL MODAL
-============================================================ */
 
-function renderModal(){
-
-  var root =
-    document.getElementById(
-      "modalRoot"
-    );
-
-  if(!detailId){
-
-    root.innerHTML = "";
-
-    return;
-  }
-
-  var a =
-    applicants.find(function(x){
-      return x.id === detailId;
-    });
-
-  if(!a){
-
-    detailId = null;
-    root.innerHTML = "";
-
-    return;
-  }
-
-  var score =
-    scoreOf(a);
-
-  var qaHtml =
-    QUESTIONS
-      .map(function(q){
-
-        var note =
-          a.notes[q.id];
-
-        return (
-
-          '<div class="qa-block">' +
-
-            '<div class="qa-q">' +
-              escapeHtml(q.text) +
-            "</div>" +
-
-            '<div class="qa-a' +
-              (
-                note
-                  ? ""
-                  : " empty"
-              ) +
-            '">' +
-
-              (
-                note
-                  ? escapeHtml(note)
-                  : "No notes recorded."
-              ) +
-
-            "</div>" +
-
-          "</div>"
-        );
-      })
-      .join("");
-
-  var ratingsHtml =
-    RATING_CATEGORIES
-      .map(function(cat){
-
-        var val =
-          Number(
-            a.ratings[cat.id]
-          ) || 0;
-
-        return (
-          '<div class="kv">' +
-            "<span>" +
-              escapeHtml(cat.label) +
-            "</span>" +
-            "<b>" +
-              (
-                val
-                  ? val + " / 5"
-                  : "—"
-              ) +
-            "</b>" +
-          "</div>"
-        );
-      })
-      .join("");
-
-  root.innerHTML =
-
-    '<div class="modal-backdrop">' +
-
-      '<div class="modal" data-stop="true">' +
-
-        '<button ' +
-          'type="button" ' +
-          'class="modal-close" ' +
-          'data-action="close-modal">' +
-          "×" +
-        "</button>" +
-
-        '<div class="detail-top">' +
-
-          "<div>" +
-
-            '<div class="detail-name">' +
-              escapeHtml(a.name) +
-            "</div>" +
-
-            '<div class="detail-meta">' +
-
-              (
-                a.grade
-                  ? "Grade " +
-                    escapeHtml(a.grade)
-                  : ""
-              ) +
-
-              (
-                a.email
-                  ? " · " +
-                    escapeHtml(a.email)
-                  : ""
-              ) +
-
-              " · Added " +
-              fmtDate(a.createdAt) +
-
-            "</div>" +
-
-          "</div>" +
-
-          '<div class="btn-row">' +
-
-            '<span class="badge badge-' +
-              escapeHtml(
-                a.status.replace(/\s+/g,"-")
-              ) +
-            '">' +
-              escapeHtml(a.status) +
-            "</span>" +
-
-            '<button type="button" ' +
-              'class="btn btn-sm" ' +
-              'data-action="edit-applicant" ' +
-              'data-id="' +
-              escapeHtml(a.id) +
-              '">' +
-              "Edit" +
-            "</button>" +
-
-            '<button type="button" ' +
-              'class="btn btn-danger btn-sm" ' +
-              'data-action="delete-applicant" ' +
-              'data-id="' +
-              escapeHtml(a.id) +
-              '">' +
-              "Delete" +
-            "</button>" +
-
-          "</div>" +
-
-        "</div>" +
-
-        '<div class="divider"></div>' +
-
-        "<h3>Overall</h3>" +
-
-        '<p style="margin-top:7px;">' +
-
-          "<strong>Average rating:</strong> " +
-
-          (
-            score === null
-              ? "Not rated"
-              : score.toFixed(1) +
-                " / 5"
-          ) +
-
-        "</p>" +
-
-        "<h3 style=\"margin-top:20px;\">Ratings</h3>" +
-
-        '<div style="margin-top:7px;">' +
-          ratingsHtml +
-        "</div>" +
-
-        '<h3 style="margin-top:24px;">Interview notes</h3>' +
-
-        '<div style="margin-top:12px;">' +
-          qaHtml +
-        "</div>" +
-
-        "<h3>Overall notes</h3>" +
-
-        '<div class="qa-a' +
-          (
-            a.overallNotes
-              ? ""
-              : " empty"
-          ) +
-          '" style="margin-top:7px;">' +
-
-          (
-            a.overallNotes
-              ? escapeHtml(a.overallNotes)
-              : "No overall notes recorded."
-          ) +
-
-        "</div>" +
-
-      "</div>" +
-
-    "</div>";
-}
-
-/* ============================================================
-   GUIDE
-============================================================ */
-
-function renderGuide(){
-
-  var steps = [
-    [
-      "1. Start with the person",
-      "Get their name, grade, and optional email before you start asking questions."
-    ],
-    [
-      "2. Ask the same core questions",
-      "Use the same five questions for everyone so the interviews are easier to compare."
-    ],
-    [
-      "3. Write evidence, not vibes",
-      "Record specific examples, explanations, and things the applicant actually said."
-    ],
-    [
-      "4. Rate after the conversation",
-      "Use the rubric instead of deciding based on the first impression."
-    ],
-    [
-      "5. Save and back up",
-      "Finish the applicant record, then export backups regularly."
-    ]
-  ];
-
-  var stepsHtml =
-    steps
-      .map(function(s){
-
-        return (
-          '<div class="card">' +
-            '<h3 style="font-size:15px;margin-bottom:6px;">' +
-              escapeHtml(s[0]) +
-            "</h3>" +
-            "<p>" +
-              escapeHtml(s[1]) +
-            "</p>" +
-          "</div>"
-        );
-
-      })
-      .join("");
-
-  var questionHtml =
-    QUESTIONS
-      .map(function(q,i){
-
-        return (
-          '<details>' +
-
-            "<summary>" +
-              (i + 1) +
-              ". " +
-              escapeHtml(q.text) +
-            "</summary>" +
-
-            "<p>" +
-              escapeHtml(q.purpose) +
-            "</p>" +
-
-            "<p>" +
-              "<strong>Listen for:</strong> " +
-              escapeHtml(q.listenFor) +
-            "</p>" +
-
-            "<p>" +
-              "<strong>Follow-up:</strong> " +
-              escapeHtml(q.followup) +
-            "</p>" +
-
-          "</details>"
-        );
-
-      })
-      .join("");
-
-  var rubricHtml =
-    RATING_CATEGORIES
-      .map(function(cat){
-
-        return (
-          '<details>' +
-
-            "<summary>" +
-              escapeHtml(cat.label) +
-            "</summary>" +
-
-            "<p>" +
-              escapeHtml(cat.description) +
-            "</p>" +
-
-            "<p><strong>1:</strong> " +
-              escapeHtml(cat.anchors[1]) +
-            "</p>" +
-
-            "<p><strong>3:</strong> " +
-              escapeHtml(cat.anchors[3]) +
-            "</p>" +
-
-            "<p><strong>5:</strong> " +
-              escapeHtml(cat.anchors[5]) +
-            "</p>" +
-
-          "</details>"
-        );
-
-      })
-      .join("");
-
-  return (
-
-    '<div class="view-head">' +
-
-      '<div class="view-eyebrow">' +
-        "FIELD GUIDE" +
-      "</div>" +
-
-      '<h1 class="view-title">' +
-        "Interview Guide" +
-      "</h1>" +
-
-      '<p class="view-sub">' +
-        "A practical guide for running consistent, useful Science Olympiad interviews." +
-      "</p>" +
-
-    "</div>" +
-
-    '<div class="guide-section">' +
-
-      "<h2 style=\"font-size:19px;margin-bottom:12px;\">" +
-        "Running an interview, step by step" +
-      "</h2>" +
-
-      stepsHtml +
-
-    "</div>" +
-
-    '<div class="guide-section">' +
-
-      "<h2 style=\"font-size:19px;margin-bottom:12px;\">" +
-        "Question by question" +
-      "</h2>" +
-
-      '<p class="muted" style="margin-bottom:12px;">' +
-        "The same guidance also appears while you run the New Interview flow." +
-      "</p>" +
-
-      questionHtml +
-
-    "</div>" +
-
-    '<div class="guide-section">' +
-
-      "<h2 style=\"font-size:19px;margin-bottom:12px;\">" +
-        "Rating rubric" +
-      "</h2>" +
-
-      rubricHtml +
-
-    "</div>" +
-
-    '<div class="guide-section">' +
-
-      "<h2 style=\"font-size:19px;margin-bottom:12px;\">" +
-        "Avoid bias" +
-      "</h2>" +
-
-      '<div class="info-box">' +
-
-        "<strong>Evaluate what the applicant demonstrates, not what you assume about the applicant.</strong>" +
-
-        "<ul class=\"guide-list\" style=\"margin-top:10px;\">" +
-
-          "<li>Do not reward confidence alone.</li>" +
-
-          "<li>Do not penalize shyness alone.</li>" +
-
-          "<li>Do not favor students because they remind you of yourself.</li>" +
-
-          "<li>Do not assume previous Science Olympiad experience automatically makes someone better.</li>" +
-
-          "<li>Use the same standards for every applicant.</li>" +
-
-        "</ul>" +
-
-      "</div>" +
-
-    "</div>" +
-
-    '<div class="guide-section">' +
-
-      "<h2 style=\"font-size:19px;margin-bottom:12px;\">" +
-        "Keeping data safe" +
-      "</h2>" +
-
-      '<div class="warning-box">' +
-
-        "<p>" +
-          "Applicant information is stored in this browser. GitHub Pages hosts the app code; it does not automatically store your roster." +
-        "</p>" +
-
-        "<p>" +
-          "Export a JSON backup regularly and keep it somewhere private and school-approved." +
-        "</p>" +
-
-      "</div>" +
-
-    "</div>"
-  );
-}
-
-/* ============================================================
-   DATA / BACKUPS
-============================================================ */
-
-function renderData(){
-
-  var bytes = 0;
-
-  try{
-    bytes =
-      new Blob([
-        JSON.stringify(applicants)
-      ]).size;
-  }catch(e){
-    bytes =
-      JSON.stringify(applicants).length;
-  }
-
-  var kb =
-    Math.round(
-      bytes / 1024 * 10
-    ) / 10;
-
-  var since =
-    daysSince(
-      meta.lastBackupAt
-    );
-
-  var lastBackupText =
-    meta.lastBackupAt
-      ? (
-          fmtDate(meta.lastBackupAt) +
-          " (" +
-          since +
-          (
-            since === 1
-              ? " day"
-              : " days"
-          ) +
-          " ago)"
-        )
-      : "Never";
-
-  return (
-
-    '<div class="view-head">' +
-
-      '<div class="view-eyebrow">' +
-        "DON'T SKIP THIS" +
-      "</div>" +
-
-      '<h1 class="view-title">' +
-        "Backups & Data" +
-      "</h1>" +
-
-      '<p class="view-sub">' +
-        "Your roster lives in this browser only. Export a copy regularly so you never lose it." +
-      "</p>" +
-
-    "</div>" +
-
-    '<div class="card">' +
-
-      '<div class="kv">' +
-        '<span class="muted">Applicants stored</span>' +
-        "<b>" +
-          applicants.length +
-        "</b>" +
-      "</div>" +
-
-      '<div class="kv">' +
-        '<span class="muted">Approximate storage used</span>' +
-        "<b>" +
-          kb +
-          " KB" +
-        "</b>" +
-      "</div>" +
-
-      '<div class="kv">' +
-        '<span class="muted">Last backup exported</span>' +
-        "<b>" +
-          lastBackupText +
-        "</b>" +
-      "</div>" +
-
-    "</div>" +
-
-    '<div class="card">' +
-
-      '<h3 style="font-size:15px;margin-bottom:8px;">' +
-        "Download a backup" +
-      "</h3>" +
-
-      "<p>" +
-        "Creates a file with every applicant, every note, and every rating. Save it somewhere private and school-approved." +
-      "</p>" +
-
-      '<div class="btn-row">' +
-
-        '<button type="button" ' +
-          'class="btn btn-primary" ' +
-          'data-action="export-json">' +
-          "Download backup (.json)" +
-        "</button>" +
-
-        '<button type="button" ' +
-          'class="btn btn-ghost" ' +
-          'data-action="export-csv">' +
-          "Download as spreadsheet (.csv)" +
-        "</button>" +
-
-      "</div>" +
-
-      '<p class="hint">' +
-        "The .json file is the one to keep for safekeeping — it can be imported right back into this app. The .csv is for opening in Google Sheets." +
-      "</p>" +
-
-    "</div>" +
-
-    '<div class="card">' +
-
-      '<h3 style="font-size:15px;margin-bottom:8px;">' +
-        "Restore from a backup" +
-      "</h3>" +
-
-      "<p>" +
-        "Choose one or more JSON backups exported from this app." +
-      "</p>" +
-
-      '<div class="btn-row">' +
-
-        '<button type="button" ' +
-          'class="btn btn-primary" ' +
-          'data-action="import-merge">' +
-          "Add to current roster" +
-        "</button>" +
-
-        '<button type="button" ' +
-          'class="btn btn-danger" ' +
-          'data-action="import-replace">' +
-          "Replace everything" +
-        "</button>" +
-
-      "</div>" +
-
-      '<p class="hint">' +
-
-        "<strong>Add to current roster</strong> lets you select multiple JSON files at once. Existing applicants stay in the roster. Matching applicant IDs are updated only when the imported copy is newer." +
-
-        "<br><br>" +
-
-        "<strong>Replace everything</strong> is the old destructive restore option. Use it when you intentionally want the selected backup to become the entire roster." +
-
-      "</p>" +
-
-      '<div id="mergeSummary"></div>' +
-
-    "</div>" +
-
-    '<div class="card">' +
-
-      "<h3>Recommended safety routine</h3>" +
-
-      "<ol>" +
-
-        "<li><strong>Before interviews:</strong> verify the applicant count.</li>" +
-
-        "<li><strong>During interviews:</strong> save each applicant.</li>" +
-
-        "<li><strong>Every session:</strong> export a JSON backup.</li>" +
-
-        "<li><strong>After exporting:</strong> verify the downloaded file exists.</li>" +
-
-        "<li><strong>Moving devices:</strong> open the new site and import your backup.</li>" +
-
-        "<li><strong>After restoring:</strong> check the applicant count and several records.</li>" +
-
-      "</ol>" +
-
-    "</div>" +
-
-    '<div class="card">' +
-
-      "<h3>Storage health</h3>" +
-
-      '<div class="kv">' +
-        "<span>Storage available</span>" +
-        "<b>" +
-          (
-            storageOK
-              ? "Yes"
-              : "Problem"
-          ) +
-        "</b>" +
-      "</div>" +
-
-      '<div class="kv">' +
-        "<span>Applicants in browser</span>" +
-        "<b>" +
-          applicants.length +
-        "</b>" +
-      "</div>" +
-
-      '<div class="info-box" style="margin-top:14px;">' +
-
-        "The app contains no server-side applicant database. It is designed to work as a static GitHub Pages site." +
-
-      "</div>" +
-
-    "</div>" +
-
-    '<div class="card danger-zone">' +
-
-      "<h3>Danger zone</h3>" +
-
-      "<p>" +
-        "Only use this if you intentionally want to erase the records in this browser. Export a backup first." +
-      "</p>" +
-
-      '<button type="button" ' +
-        'class="btn btn-danger" ' +
-        'data-action="erase-all">' +
-        "Erase all browser records" +
-      "</button>" +
-
-    "</div>"
-  );
-}
-
-/* ============================================================
+/* =========================
    EXPORT
-============================================================ */
+========================= */
 
-function downloadBlob(
-  content,
-  filename,
-  type
-){
+function exportJSON(){
 
-  var blob =
-    new Blob(
-      [content],
-      {type:type}
-    );
-
-  var url =
-    URL.createObjectURL(blob);
-
-  var a =
-    document.createElement("a");
-
-  a.href = url;
-  a.download = filename;
-
-  document.body.appendChild(a);
-
-  a.click();
-
-  document.body.removeChild(a);
-
-  setTimeout(function(){
-    URL.revokeObjectURL(url);
-  },1000);
-}
-
-function todayStr(){
-
-  var d =
-    new Date();
-
-  function pad(n){
-    return n < 10
-      ? "0" + n
-      : "" + n;
-  }
-
-  return (
-    d.getFullYear() +
-    "-" +
-    pad(d.getMonth() + 1) +
-    "-" +
-    pad(d.getDate())
-  );
-}
-
-function exportJson(){
-
-  var payload = {
+  const payload = {
 
     app:
       "Science Olympiad Interview HQ",
 
     formatVersion:
-      3,
+      2,
 
     exportedAt:
       new Date().toISOString(),
 
     applicants:
-      applicants
+      db.applicants
 
   };
 
-  downloadBlob(
-    JSON.stringify(
-      payload,
-      null,
-      2
-    ),
-    "science-olympiad-applicants-" +
-      todayStr() +
-      ".json",
-    "application/json"
+
+  const blob =
+    new Blob(
+      [
+        JSON.stringify(
+          payload,
+          null,
+          2
+        )
+      ],
+      {
+        type:"application/json"
+      }
+    );
+
+
+  const url =
+    URL.createObjectURL(blob);
+
+
+  const link =
+    document.createElement("a");
+
+
+  link.href = url;
+
+  link.download =
+    "science-olympiad-backup-" +
+    new Date()
+      .toISOString()
+      .slice(0,10) +
+    ".json";
+
+
+  document.body.appendChild(link);
+
+  link.click();
+
+  link.remove();
+
+
+  setTimeout(
+    ()=>URL.revokeObjectURL(url),
+    1000
   );
 
-  meta.lastBackupAt =
-    Date.now();
 
-  saveMeta(meta);
-
-  showToast(
-    "Backup downloaded."
+  localStorage.setItem(
+    "sciOlyLastBackupAt",
+    String(Date.now())
   );
 
-  render();
-}
 
-function csvEscape(v){
+  toast(
+    "JSON backup downloaded."
+  );
 
-  var s =
-    (
-      v === undefined ||
-      v === null
-    )
-      ? ""
-      : String(v);
 
-  if(/[",\n]/.test(s)){
-    s =
-      '"' +
-      s.replace(/"/g,'""') +
-      '"';
+  if(page === "data"){
+
+    setTimeout(
+      render,
+      200
+    );
+
   }
 
-  return s;
 }
 
-function exportCsv(){
 
-  var headers = [
-    "Name",
-    "Grade",
-    "Email",
-    "Status",
-    "Overall Score"
-  ];
+/* =========================
+   IMPORT (merge, multi-file)
+========================= */
 
-  QUESTIONS.forEach(function(q){
-    headers.push(
-      q.short + " Notes"
-    );
-  });
+function cleanApplicant(applicant){
 
-  RATING_CATEGORIES.forEach(function(c){
-    headers.push(
-      c.label + " Rating"
-    );
-  });
+  return {
 
-  headers.push(
-    "Overall Notes",
-    "Date Added"
-  );
+    id:
+      String(
+        applicant.id ||
+        uid()
+      ),
 
-  var rows = [
-    headers
-  ];
+    name:
+      String(
+        applicant.name ||
+        ""
+      ).trim(),
 
-  applicants.forEach(function(a){
+    grade:
+      String(
+        applicant.grade ||
+        ""
+      ),
 
-    var row = [
-      a.name,
-      a.grade,
-      a.email,
-      a.status,
-      (
-        scoreOf(a) !== null
-          ? scoreOf(a).toFixed(1)
-          : ""
+    answers:
+      Array.isArray(
+        applicant.answers
       )
-    ];
+      ?
+      QUESTIONS.map(
+        (_,index)=>
+          String(
+            applicant
+              .answers[index] ||
+            ""
+          )
+      )
+      :
+      Array(5).fill(""),
 
-    QUESTIONS.forEach(function(q){
-      row.push(
-        a.notes[q.id] || ""
-      );
-    });
+    ratings:
+      applicant.ratings &&
+      typeof applicant.ratings === "object"
+      ?
+      applicant.ratings
+      :
+      {},
 
-    RATING_CATEGORIES.forEach(function(c){
-      row.push(
-        a.ratings[c.id] || ""
-      );
-    });
+    notes:
+      String(
+        applicant.notes ||
+        ""
+      ),
 
-    row.push(
-      a.overallNotes || "",
-      fmtDate(a.createdAt)
-    );
+    completed:
+      Boolean(
+        applicant.completed
+      ),
 
-    rows.push(row);
-  });
+    createdAt:
+      Number(
+        applicant.createdAt
+      ) ||
+      Date.now(),
 
-  var csv =
-    rows
-      .map(function(r){
-        return r
-          .map(csvEscape)
-          .join(",");
-      })
-      .join("\r\n");
+    updatedAt:
+      Number(
+        applicant.updatedAt
+      ) ||
+      Date.now()
 
-  downloadBlob(
-    csv,
-    "science-olympiad-applicants-" +
-      todayStr() +
-      ".csv",
-    "text/csv"
-  );
+  };
 
-  meta.lastBackupAt =
-    Date.now();
-
-  saveMeta(meta);
-
-  showToast(
-    "Spreadsheet downloaded."
-  );
-
-  render();
 }
 
-/* ============================================================
-   IMPORT NORMALIZATION
-============================================================ */
 
-function normalizeImportedData(data){
+async function readApplicantsFromFile(file){
 
-  if(!data){
-    throw new Error(
-      "The file is empty."
-    );
-  }
+  const text =
+    await file.text();
 
-  var records = null;
+  const data =
+    JSON.parse(text);
 
-  /*
-    Accept both:
-      { applicants:[...] }
-    and:
-      [...]
-  */
-
-  if(Array.isArray(data)){
-
-    records = data;
-
-  }
-
-  else if(
-    Array.isArray(
+  if(
+    !data ||
+    !Array.isArray(
       data.applicants
     )
   ){
 
-    records =
-      data.applicants;
-
-  }
-
-  else{
-
     throw new Error(
-      "This does not appear to be a Science Olympiad Interview HQ backup."
+      "Invalid backup: " +
+      file.name
     );
 
   }
 
-  return records
-    .filter(function(record){
-      return (
-        record &&
-        typeof record === "object"
-      );
-    })
-    .map(normalizeApplicant)
-    .filter(function(applicant){
-      return applicant.name.trim();
-    });
+  return data.applicants
+    .map(cleanApplicant)
+    .filter(
+      applicant =>
+        applicant.name
+    );
+
 }
 
-/* ============================================================
-   MULTI-FILE MERGE
-============================================================ */
 
-async function mergeSelectedFiles(){
+async function importJSON(event){
 
-  var input =
-    document.getElementById(
-      "importFileInput"
-    );
-
-  var files =
+  const files =
     Array.from(
-      input.files || []
+      event.target.files || []
     );
 
   if(!files.length){
-
-    alert(
-      "Please select at least one JSON backup file."
-    );
-
     return;
   }
 
-  var confirmed =
-    window.confirm(
 
-      "You selected " +
-      files.length +
-      " backup file(s).\n\n" +
+  const merged = new Map();
 
-      "The applicants in those files will be added to your current master list.\n\n" +
-
-      "Existing records with the exact same applicant ID will use the newer version.\n\n" +
-
-      "Applicants with different IDs but the same name will NOT be automatically merged.\n\n" +
-
-      "Continue?"
-
-    );
-
-  if(!confirmed){
-    return;
+  // start with everything already saved in this browser
+  for(const applicant of db.applicants){
+    merged.set(applicant.id, applicant);
   }
 
-  var totalRecords = 0;
-  var added = 0;
-  var updated = 0;
-  var skipped = 0;
+  const failedFiles = [];
+  let filesRead = 0;
+  let incomingCount = 0;
 
-  var errors = [];
-
-  var importedRecords = [];
-
-  /*
-    Read every selected file.
-  */
-
-  for(
-    var i=0;
-    i<files.length;
-    i++
-  ){
-
-    var file =
-      files[i];
+  for(const file of files){
 
     try{
 
-      var text =
-        await file.text();
+      const fromFile =
+        await readApplicantsFromFile(file);
 
-      var data =
-        JSON.parse(text);
+      filesRead++;
+      incomingCount += fromFile.length;
 
-      var records =
-        normalizeImportedData(data);
+      for(const applicant of fromFile){
 
-      totalRecords +=
-        records.length;
+        const existing =
+          merged.get(applicant.id);
 
-      importedRecords.push(
-        ...records
-      );
+        // if this id is already present (from the browser or an
+        // earlier file in this same import), keep whichever
+        // version was updated more recently
+        if(
+          !existing ||
+          (applicant.updatedAt || 0) >=
+          (existing.updatedAt || 0)
+        ){
 
-    }catch(error){
+          merged.set(
+            applicant.id,
+            applicant
+          );
 
-      errors.push(
-        file.name +
-        ": " +
-        (
-          error &&
-          error.message
-            ? error.message
-            : "invalid JSON"
-        )
-      );
-    }
-  }
+        }
 
-  /*
-    Exact-ID merge.
-    Same ID = same applicant record.
-    Newer updatedAt wins.
-  */
-
-  var byId =
-    new Map(
-      applicants.map(function(applicant){
-        return [
-          applicant.id,
-          applicant
-        ];
-      })
-    );
-
-  importedRecords.forEach(function(imported){
-
-    var existing =
-      byId.get(
-        imported.id
-      );
-
-    if(!existing){
-
-      applicants.push(
-        imported
-      );
-
-      byId.set(
-        imported.id,
-        imported
-      );
-
-      added++;
-
-      return;
-    }
-
-    var existingTime =
-      Number(
-        existing.updatedAt
-      ) || 0;
-
-    var importedTime =
-      Number(
-        imported.updatedAt
-      ) || 0;
-
-    if(importedTime > existingTime){
-
-      var index =
-        applicants.findIndex(
-          function(applicant){
-            return (
-              applicant.id ===
-              imported.id
-            );
-          }
-        );
-
-      if(index >= 0){
-
-        applicants[index] =
-          imported;
       }
 
-      byId.set(
-        imported.id,
-        imported
-      );
+    }catch{
 
-      updated++;
+      failedFiles.push(file.name);
 
-    }else{
-
-      skipped++;
     }
 
-  });
+  }
 
-  var saved =
-    saveApplicants();
 
-  if(!saved){
+  if(!filesRead){
 
     alert(
-      "The files were read, but the browser could not save the merged roster."
+      "None of the selected files looked like a valid Science Olympiad Interview HQ backup."
     );
+
+    event.target.value = "";
 
     return;
-  }
-
-  /*
-    Find same-name records with different IDs.
-    These are deliberately NOT merged.
-  */
-
-  var possibleDuplicates =
-    findPossibleDuplicateNames();
-
-  /*
-    Refresh everything.
-  */
-
-  render();
-
-  /*
-    Put summary into the newly rendered data page.
-  */
-
-  var summary =
-    document.getElementById(
-      "mergeSummary"
-    );
-
-  if(summary){
-
-    summary.innerHTML =
-
-      '<div class="info-box" style="margin-top:15px;">' +
-
-        "<h3 style=\"font-size:15px;margin-bottom:12px;\">" +
-          "Merge complete" +
-        "</h3>" +
-
-        '<div class="grid-3">' +
-
-          mergeStat(
-            files.length,
-            "Files processed"
-          ) +
-
-          mergeStat(
-            totalRecords,
-            "Records found"
-          ) +
-
-          mergeStat(
-            added,
-            "New applicants added"
-          ) +
-
-          mergeStat(
-            updated,
-            "Existing records updated"
-          ) +
-
-          mergeStat(
-            skipped,
-            "Older duplicates skipped"
-          ) +
-
-          mergeStat(
-            possibleDuplicates.length,
-            "Possible duplicate names"
-          ) +
-
-        "</div>" +
-
-      "</div>" +
-
-      (
-        errors.length
-
-          ? (
-              '<div class="danger-box" style="margin-top:15px;">' +
-
-                "<strong>Files with errors:</strong>" +
-
-                "<ul>" +
-
-                  errors
-                    .map(function(error){
-                      return (
-                        "<li>" +
-                        escapeHtml(error) +
-                        "</li>"
-                      );
-                    })
-                    .join("") +
-
-                "</ul>" +
-
-              "</div>"
-            )
-
-          : ""
-      ) +
-
-      (
-        possibleDuplicates.length
-
-          ? (
-              '<div class="warning-box" style="margin-top:15px;">' +
-
-                "<strong>Possible duplicate applicants detected.</strong>" +
-
-                "<p style=\"margin-top:7px;\">" +
-                  "Applicants with the same normalized name but different IDs were kept as separate records. This is intentional so two different students with the same name are not accidentally merged." +
-                "</p>" +
-
-                "<ul>" +
-
-                  possibleDuplicates
-                    .map(function(group){
-
-                      return (
-                        "<li>" +
-                          group
-                            .map(function(name){
-                              return escapeHtml(name);
-                            })
-                            .join(" · ") +
-                        "</li>"
-                      );
-
-                    })
-                    .join("") +
-
-                "</ul>" +
-
-              "</div>"
-            )
-
-          : (
-              '<div class="info-box" style="margin-top:15px;">' +
-                "No possible duplicate names were detected." +
-              "</div>"
-            )
-      );
 
   }
 
-  showToast(
-    "Merged " +
-    added +
-    " new applicant(s) and updated " +
-    updated +
-    " existing record(s)."
-  );
 
-  input.value = "";
-}
+  const mergedList =
+    Array.from(merged.values());
 
-function mergeStat(number,label){
+  const newCount =
+    mergedList.length -
+    db.applicants.length;
 
-  return (
-    '<div class="merge-stat">' +
+  let message =
+    `Import from ${filesRead} file(s) ` +
+    `containing ${incomingCount} applicant record(s)? ` +
+    `Your current ${db.applicants.length} applicant(s) ` +
+    `will be kept, and the result will be ` +
+    `${mergedList.length} applicant(s) total ` +
+    `(duplicates are merged by keeping the most ` +
+    `recently updated version).`;
 
-      "<strong>" +
-        number +
-      "</strong>" +
+  if(failedFiles.length){
 
-      '<span class="small muted">' +
-        escapeHtml(label) +
-      "</span>" +
+    message +=
+      `\n\nNote: ${failedFiles.length} file(s) ` +
+      `could not be read and were skipped: ` +
+      failedFiles.join(", ");
 
-    "</div>"
-  );
-}
+  }
 
-/* ============================================================
-   POSSIBLE DUPLICATES
-============================================================ */
 
-function normalizeName(name){
+  if(!confirm(message)){
 
-  return String(name || "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g,"")
-    .trim();
-}
-
-function findPossibleDuplicateNames(){
-
-  var groups =
-    new Map();
-
-  applicants.forEach(function(applicant){
-
-    var normalized =
-      normalizeName(
-        applicant.name
-      );
-
-    if(!normalized){
-      return;
-    }
-
-    if(!groups.has(normalized)){
-
-      groups.set(
-        normalized,
-        []
-      );
-    }
-
-    groups
-      .get(normalized)
-      .push(applicant);
-
-  });
-
-  return Array.from(
-    groups.values()
-  )
-  .filter(function(group){
-    /*
-      More than one applicant with the
-      same normalized name.
-    */
-    return group.length > 1;
-  })
-  .map(function(group){
-
-    return group.map(
-      function(applicant){
-        return applicant.name;
-      }
-    );
-
-  });
-}
-
-/* ============================================================
-   REPLACE EVERYTHING
-============================================================ */
-
-async function replaceWithSelectedFile(){
-
-  var input =
-    document.getElementById(
-      "importFileInput"
-    );
-
-  var file =
-    input.files &&
-    input.files[0];
-
-  if(!file){
-
-    alert(
-      "Please select a JSON backup file."
-    );
+    event.target.value = "";
 
     return;
+
   }
+
 
   try{
 
-    var text =
-      await file.text();
+    const saved =
+      await replaceAll(mergedList);
 
-    var data =
-      JSON.parse(text);
-
-    var cleaned =
-      normalizeImportedData(
-        data
-      );
-
-    if(!cleaned.length){
+    if(!saved){
 
       throw new Error(
-        "The backup contains no valid applicants."
-      );
-    }
-
-    var confirmed =
-      window.confirm(
-
-        "This will replace all " +
-        applicants.length +
-        " current applicant(s) with " +
-        cleaned.length +
-        " applicant(s) from the selected backup.\n\n" +
-
-        "This cannot be undone unless you have another backup.\n\n" +
-
-        "Continue?"
-
+        "Could not save"
       );
 
-    if(!confirmed){
-      return;
     }
 
-    applicants =
-      cleaned;
-
-    if(!saveApplicants()){
-
-      throw new Error(
-        "Could not save the restored roster."
-      );
-    }
-
-    clearDraft();
-
-    pendingResumeDraft =
-      null;
-
-    showToast(
-      "Backup restored."
+    toast(
+      newCount > 0
+        ? `Backup merged in. ${newCount} new applicant(s) added.`
+        : "Backup merged in."
     );
 
-    view =
-      "roster";
+    go("applicants");
 
-    render();
-
-  }catch(error){
+  }catch{
 
     alert(
-      "That file is not a valid Science Olympiad Interview HQ backup.\n\n" +
-      (
-        error &&
-        error.message
-          ? error.message
-          : ""
-      )
+      "The browser could not save the merged records."
     );
 
   }finally{
 
-    input.value = "";
+    event.target.value = "";
+
   }
+
 }
 
-/* ============================================================
+
+/* =========================
    ERASE
-============================================================ */
+========================= */
 
-function eraseAll(){
+async function eraseAll(){
 
-  if(!applicants.length){
+  if(!db.applicants.length){
 
     alert(
       "There are no applicant records to erase."
     );
 
     return;
+
   }
 
+
   if(
-    !window.confirm(
-      "ERASE ALL APPLICANT RECORDS from this browser?\n\nThis cannot be undone without a backup."
+    !confirm(
+      "ERASE ALL APPLICANT RECORDS from this browser? This cannot be undone without a backup."
     )
   ){
 
     return;
+
   }
 
+
   if(
-    !window.confirm(
-      "Final confirmation: have you exported a backup?\n\nClick OK only if you are certain."
+    !confirm(
+      "Final confirmation: have you exported a backup? Click OK only if you are certain."
     )
   ){
 
     return;
+
   }
 
-  applicants = [];
 
-  var success =
-    saveApplicants();
+  const success =
+    await replaceAll([]);
+
 
   if(success){
 
-    showToast(
+    toast(
       "All browser records erased."
     );
 
-    view =
-      "dashboard";
-
-    render();
+    go("dashboard");
 
   }else{
 
     alert(
       "The browser did not allow the records to be erased."
     );
+
   }
+
 }
 
-/* ============================================================
-   ACTIONS
-============================================================ */
 
-function goTo(v){
+/* =========================
+   RENDER
+========================= */
 
-  view = v;
+function render(){
 
-  render();
+  const main =
+    document.getElementById(
+      "main"
+    );
+
+
+  if(page === "dashboard"){
+    dashboard(main);
+  }
+
+  else if(page === "interview"){
+    interview(main);
+  }
+
+  else if(page === "applicants"){
+    applicants(main);
+  }
+
+  else if(page === "guide"){
+    guide(main);
+  }
+
+  else if(page === "data"){
+    dataPage(main);
+  }
+
 }
 
-function beginNewInterviewFlow(){
 
-  if(pendingResumeDraft){
-
-    var draftName =
-      pendingResumeDraft.data.name ||
-      "someone";
-
-    if(
-      !window.confirm(
-        "You have an unfinished interview for " +
-        draftName +
-        ". Starting a new one will discard it. Continue?"
-      )
-    ){
-
-      return;
-    }
-
-    clearDraft();
-
-    pendingResumeDraft =
-      null;
-  }
-
-  startWizard(null);
-
-  render();
-}
-
-function handleWizardBind(el){
-
-  var field =
-    el.getAttribute(
-      "data-bind"
-    );
-
-  var noteField =
-    el.getAttribute(
-      "data-bind-note"
-    );
-
-  var isOverall =
-    el.hasAttribute(
-      "data-bind-overall"
-    );
-
-  if(field){
-
-    wizard.data[field] =
-      el.value;
-  }
-
-  else if(noteField){
-
-    wizard.data.notes[noteField] =
-      el.value;
-  }
-
-  else if(isOverall){
-
-    wizard.data.overallNotes =
-      el.value;
-  }
-
-  saveDraft(wizard);
-}
-
-function finishSaveApplicant(){
-
-  var d =
-    wizard.data;
-
-  if(
-    !d.name ||
-    !d.name.trim()
-  ){
-
-    showToast(
-      "Add a name before saving."
-    );
-
-    wizard.step =
-      0;
-
-    render();
-
-    return;
-  }
-
-  var now =
-    Date.now();
-
-  d.name =
-    d.name.trim();
-
-  d.updatedAt =
-    now;
-
-  if(!wizard.editingId){
-
-    d.id =
-      d.id || uid();
-
-    d.createdAt =
-      d.createdAt || now;
-
-    applicants.push(d);
-
-    showToast(
-      "Added " +
-      d.name +
-      " to the roster."
-    );
-
-  }else{
-
-    var index =
-      applicants.findIndex(
-        function(a){
-          return (
-            a.id ===
-            wizard.editingId
-          );
-        }
-      );
-
-    if(index > -1){
-
-      applicants[index] =
-        d;
-
-      showToast(
-        "Saved changes for " +
-        d.name +
-        "."
-      );
-
-    }else{
-
-      applicants.push(d);
-
-      showToast(
-        "Added " +
-        d.name +
-        " to the roster."
-      );
-    }
-  }
-
-  saveApplicants();
-
-  clearDraft();
-
-  pendingResumeDraft =
-    null;
-
-  wizard = null;
-
-  goTo("roster");
-}
-
-/* ============================================================
-   GLOBAL EVENT LISTENERS
-============================================================ */
-
-function attachGlobalListeners(){
-
-  document.body.addEventListener(
-    "click",
-    function(e){
-
-      var backdrop =
-        e.target.closest(
-          ".modal-backdrop"
-        );
-
-      var stopEl =
-        e.target.closest(
-          "[data-stop]"
-        );
-
-      if(
-        backdrop &&
-        !stopEl
-      ){
-
-        detailId = null;
-
-        renderModal();
-
-        return;
-      }
-
-      var target =
-        e.target.closest(
-          "[data-action]"
-        );
-
-      if(!target){
-        return;
-      }
-
-      var action =
-        target.getAttribute(
-          "data-action"
-        );
-
-      /* NAV */
-
-      if(action === "nav"){
-
-        var targetView =
-          target.getAttribute(
-            "data-view"
-          );
-
-        if(
-          targetView ===
-            "new-interview" &&
-          !wizard
-        ){
-
-          beginNewInterviewFlow();
-
-        }else{
-
-          goTo(
-            targetView
-          );
-        }
-
-        return;
-      }
-
-      /* START */
-
-      if(
-        action ===
-        "start-interview"
-      ){
-
-        beginNewInterviewFlow();
-
-        return;
-      }
-
-      /* RESUME */
-
-      if(
-        action ===
-        "resume-draft"
-      ){
-
-        wizard =
-          pendingResumeDraft;
-
-        pendingResumeDraft =
-          null;
-
-        view =
-          "new-interview";
-
-        render();
-
-        return;
-      }
-
-      /* DISCARD */
-
-      if(
-        action ===
-        "discard-draft"
-      ){
-
-        clearDraft();
-
-        pendingResumeDraft =
-          null;
-
-        render();
-
-        return;
-      }
-
-      /* CANCEL */
-
-      if(
-        action ===
-        "cancel-wizard"
-      ){
-
-        clearDraft();
-
-        wizard = null;
-
-        goTo(
-          "dashboard"
-        );
-
-        return;
-      }
-
-      /* BACK */
-
-      if(
-        action ===
-        "wizard-back"
-      ){
-
-        wizard.step =
-          Math.max(
-            0,
-            wizard.step - 1
-          );
-
-        saveDraft(wizard);
-
-        render();
-
-        return;
-      }
-
-      /* NEXT */
-
-      if(
-        action ===
-        "wizard-next"
-      ){
-
-        if(
-          wizard.step === 0 &&
-          !wizard.data.name.trim()
-        ){
-
-          showToast(
-            "Add a name before continuing."
-          );
-
-          return;
-        }
-
-        wizard.step =
-          Math.min(
-            WIZARD_TOTAL_STEPS - 1,
-            wizard.step + 1
-          );
-
-        saveDraft(wizard);
-
-        render();
-
-        return;
-      }
-
-      /* SAVE */
-
-      if(
-        action ===
-        "wizard-save"
-      ){
-
-        finishSaveApplicant();
-
-        return;
-      }
-
-      /* RATING */
-
-      if(
-        action ===
-        "set-rating"
-      ){
-
-        var category =
-          target.getAttribute(
-            "data-cat"
-          );
-
-        var value =
-          parseInt(
-            target.getAttribute(
-              "data-val"
-            ),
-            10
-          );
-
-        if(
-          wizard.data.ratings[
-            category
-          ] === value
-        ){
-
-          wizard.data.ratings[
-            category
-          ] = 0;
-
-        }else{
-
-          wizard.data.ratings[
-            category
-          ] = value;
-        }
-
-        saveDraft(wizard);
-
-        render();
-
-        return;
-      }
-
-      /* OPEN DETAIL */
-
-      if(
-        action ===
-        "open-detail"
-      ){
-
-        detailId =
-          target.getAttribute(
-            "data-id"
-          );
-
-        renderModal();
-
-        return;
-      }
-
-      /* CLOSE MODAL */
-
-      if(
-        action ===
-        "close-modal"
-      ){
-
-        detailId = null;
-
-        renderModal();
-
-        return;
-      }
-
-      /* EDIT */
-
-      if(
-        action ===
-        "edit-applicant"
-      ){
-
-        var editId =
-          target.getAttribute(
-            "data-id"
-          );
-
-        var found =
-          applicants.find(
-            function(a){
-              return a.id === editId;
-            }
-          );
-
-        if(found){
-
-          detailId = null;
-
-          renderModal();
-
-          startWizard(found);
-
-          render();
-
-        }
-
-        return;
-      }
-
-      /* DELETE */
-
-      if(
-        action ===
-        "delete-applicant"
-      ){
-
-        var deleteId =
-          target.getAttribute(
-            "data-id"
-          );
-
-        var foundDelete =
-          applicants.find(
-            function(a){
-              return a.id === deleteId;
-            }
-          );
-
-        var name =
-          foundDelete
-            ? foundDelete.name
-            : "this applicant";
-
-        if(
-          window.confirm(
-            "Delete " +
-            name +
-            "? This cannot be undone. Consider exporting a backup first."
-          )
-        ){
-
-          applicants =
-            applicants.filter(
-              function(a){
-                return a.id !== deleteId;
-              }
-            );
-
-          saveApplicants();
-
-          detailId = null;
-
-          renderModal();
-
-          render();
-
-          showToast(
-            name +
-            " was deleted."
-          );
-        }
-
-        return;
-      }
-
-      /* FILTER */
-
-      if(
-        action ===
-        "filter-status"
-      ){
-
-        roster.status =
-          target.getAttribute(
-            "data-status"
-          );
-
-        render();
-
-        return;
-      }
-
-      /* EXPORT JSON */
-
-      if(
-        action ===
-        "export-json"
-      ){
-
-        exportJson();
-
-        return;
-      }
-
-      /* EXPORT CSV */
-
-      if(
-        action ===
-        "export-csv"
-      ){
-
-        exportCsv();
-
-        return;
-      }
-
-      /* MULTI-FILE MERGE */
-
-      if(
-        action ===
-        "import-merge"
-      ){
-
-        var mergeInput =
-          document.getElementById(
-            "importFileInput"
-          );
-
-        mergeInput.multiple =
-          true;
-
-        mergeInput.setAttribute(
-          "data-mode",
-          "merge"
-        );
-
-        mergeInput.value = "";
-
-        mergeInput.click();
-
-        return;
-      }
-
-      /* REPLACE */
-
-      if(
-        action ===
-        "import-replace"
-      ){
-
-        var replaceInput =
-          document.getElementById(
-            "importFileInput"
-          );
-
-        replaceInput.multiple =
-          false;
-
-        replaceInput.setAttribute(
-          "data-mode",
-          "replace"
-        );
-
-        replaceInput.value = "";
-
-        replaceInput.click();
-
-        return;
-      }
-
-      /* ERASE */
-
-      if(
-        action ===
-        "erase-all"
-      ){
-
-        eraseAll();
-
-        return;
-      }
-
-    }
-  );
-
-  /* INPUT */
-
-  document.body.addEventListener(
-    "input",
-    function(e){
-
-      var el =
-        e.target;
-
-      if(
-        el.matches(
-          "[data-bind], [data-bind-note], [data-bind-overall]"
-        )
-      ){
-
-        handleWizardBind(el);
-
-      }
-
-      else if(
-        el.id ===
-        "rosterSearch"
-      ){
-
-        roster.search =
-          el.value;
-
-        updateRosterResults();
-      }
-    }
-  );
-
-  /* CHANGE */
-
-  document.body.addEventListener(
-    "change",
-    function(e){
-
-      var el =
-        e.target;
-
-      if(
-        el.matches(
-          "[data-bind]"
-        )
-      ){
-
-        handleWizardBind(el);
-
-      }
-
-      else if(
-        el.id ===
-        "rosterSort"
-      ){
-
-        roster.sort =
-          el.value;
-
-        updateRosterResults();
-      }
-
-    }
-  );
-
-  /* FILE INPUT */
-
-  document
-    .getElementById(
-      "importFileInput"
-    )
-    .addEventListener(
-      "change",
-      async function(e){
-
-        var input =
-          e.target;
-
-        var mode =
-          input.getAttribute(
-            "data-mode"
-          );
-
-        if(mode === "replace"){
-
-          await replaceWithSelectedFile();
-
-        }else{
-
-          await mergeSelectedFiles();
-
-        }
-
-      }
-    );
-}
-
-/* ============================================================
+/* =========================
    START
-============================================================ */
+========================= */
 
-document.addEventListener(
-  "DOMContentLoaded",
-  function(){
+(async function(){
 
-    render();
+  await loadData();
 
-    attachGlobalListeners();
-
-  }
-);
+  render();
 
 })();
+
 </script>
 
 </body>
