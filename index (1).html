@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dhiraj Balaga — Orbit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#04060d; --panel:#0b0f1c; --line:rgba(255,255,255,.12);
+    --text:#eef1fb; --sub:#9aa3c0; --accent:#e8b23c;
+    --safe-t:env(safe-area-inset-top,0px); --safe-b:env(safe-area-inset-bottom,0px);
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;margin:0;background:var(--bg);color:var(--text);overflow:hidden;
+    font-family:'Inter',system-ui,-apple-system,sans-serif;}
+  #scene{position:fixed;inset:0;}
+  .hud{position:fixed;top:calc(22px + var(--safe-t));left:24px;z-index:5;pointer-events:none;}
+  .hud h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(20px,3vw,28px);
+    margin:0 0 4px;letter-spacing:.2px;}
+  .hud p{margin:0;color:var(--sub);font-size:13px;max-width:280px;line-height:1.5;}
+  .hint{position:fixed;bottom:calc(20px + var(--safe-b));left:50%;transform:translateX(-50%);
+    z-index:5;color:var(--sub);font-size:12.5px;text-align:center;pointer-events:none;
+    transition:opacity .6s ease;}
+  .hint.hide{opacity:0;}
+  .label{position:fixed;transform:translate(-50%,-140%);pointer-events:none;z-index:4;
+    font-size:11.5px;color:var(--sub);letter-spacing:.3px;white-space:nowrap;
+    transition:color .2s ease, opacity .2s ease;}
+  .label.near{color:var(--text);}
+  #panel{position:fixed;top:0;right:0;height:100%;width:min(420px,92vw);
+    background:var(--panel);border-left:1px solid var(--line);
+    transform:translateX(105%);transition:transform .5s cubic-bezier(.22,.9,.28,1);
+    z-index:10;overflow-y:auto;padding:calc(28px + var(--safe-t)) 28px calc(28px + var(--safe-b));}
+  #panel.open{transform:translateX(0);}
+  #panel .tag{color:var(--accent);font-size:12px;letter-spacing:.4px;font-family:'Space Grotesk',sans-serif;}
+  #panel h2{font-family:'Space Grotesk',sans-serif;font-size:26px;margin:6px 0 18px;line-height:1.15;}
+  #panel .lead{color:var(--sub);font-size:14px;line-height:1.6;margin-bottom:22px;}
+  #panel .item{border-top:1px solid var(--line);padding:14px 0;}
+  #panel .item:first-of-type{border-top:none;}
+  #panel .item b{display:block;font-size:14.5px;margin-bottom:4px;}
+  #panel .item span{display:block;font-size:13px;color:var(--sub);line-height:1.55;}
+  #close{position:absolute;top:calc(20px + var(--safe-t));right:20px;background:none;border:none;
+    color:var(--sub);font-size:22px;cursor:pointer;line-height:1;padding:6px;}
+  #close:hover{color:var(--text);}
+  @media(prefers-color-scheme:light){
+    :root:not([data-theme="dark"]){--bg:#04060d;--panel:#0b0f1c;--text:#eef1fb;}
+  }
+</style>
+</head>
+<body>
+  <div class="hud">
+    <h1>Dhiraj Balaga</h1>
+    <p>An orbit of everything I've built, learned, and chased. Click a planet.</p>
+  </div>
+  <div class="hint" id="hint">drag to look around · click a planet to explore</div>
+  <div id="scene"></div>
+  <div id="labels"></div>
+
+  <div id="panel">
+    <button id="close" aria-label="Close">✕</button>
+    <div class="tag" id="p-tag"></div>
+    <h2 id="p-title"></h2>
+    <p class="lead" id="p-lead"></p>
+    <div id="p-items"></div>
+  </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const DATA = {
+  mercury:{tag:"01 · Education",title:"Foundations",lead:"AP Scholar with Honor, closing out senior year with a 5 on AP Calculus BC.",
+    items:[["AP Scholar with Honor","Recognized across AP coursework."],["AP Calculus BC","Score of 5, taught by Mrs. Perez."],["Class of 2027","Senior year, South Carolina."]]},
+  venus:{tag:"02 · Experience",title:"Startsite",lead:"A web development business I founded in October 2025, building real sites for real clients.",
+    items:[["Founder, Startsite","Client websites on GitHub Pages with AI integration, from consult to deployment."],["Community builds","Free educational websites for community members, teaching coding and AI tools along the way."],["Site visits","Schaeffler (May 19) and ATI (May 22) — manufacturing and engineering up close."]]},
+  earth:{tag:"03 · Leadership",title:"Where I Lead",lead:"Vice President of Science Olympiad, and steady hours of service through Beta Club.",
+    items:[["VP, Science Olympiad","2nd place at State in the Machines event."],["Beta Club","30+ service hours — book drives, festival setup, community cleanups."],["Club Soccer","Charlotte Independence, balanced against everything else."]]},
+  mars:{tag:"04 · Projects",title:"Things I've Built",lead:"Independent builds, from code to CAD to a mouse trap car that actually won.",
+    items:[["Minesweeper (Python)","Built from scratch for AP Computer Science."],["Topological Mapping Device","Scans an area and generates a map."],["Solar-Panel Plane","Automatic flight navigation, self-directed."],["Hubble Replica","A detailed 1:25 scale model."],["Mouse Trap Car","1st place — torque and friction, put to work."]]},
+  jupiter:{tag:"05 · Honors",title:"Recognitions",lead:"The biggest wins, gathered in one place.",
+    items:[["Science Olympiad","2nd place, State — Machines event."],["AP Scholar with Honor",""],["AP Calculus BC","Score of 5."],["Mouse Trap Car","1st place, Physics."],["Chess Club","1st place, middle school competition."]]},
+  saturn:{tag:"06 · Skills",title:"What I Work With",lead:"Technical range paired with a few things that have nothing to do with a screen.",
+    items:[["Technical","Python, HTML, CAD modeling, UI/UX design, AI integration."],["Creative","Game design, animation, video and photo editing, origami."],["Off-screen","Calisthenics — training toward planche and handstand pushups — piano, soccer."]]},
+  uranus:{tag:"07 · Service","title":"Giving Back",lead:"Beta Club work that added up to more than the hours suggest.",
+    items:[["Book drives","28 books total, FCCLA and Lucy's Library."],["Event setup","National Pie Day, Diwali festival, Kites Fall Fest."],["Fight for Families 5K","On-the-ground support."],["Teaching","Free coding and AI lessons through community website builds."]]},
+  neptune:{tag:"08 · Character",title:"What Drives Me",lead:"The traits that show up across everything above.",
+    items:[["Curiosity","A genuine obsession with learning and applying it."],["Perseverance","Staying with a hard problem until it gives."],["Collaboration","Helping others understand, not just finishing first."],["Attention to detail","Noticing what most people miss."]]}
+};
+
+let scene, camera, renderer, sun, planets=[], stars, raycaster, mouse;
+let camAngle={x:0.28,y:0}, camDist=46, dragging=false, lastX=0, lastY=0;
+let targetAngle={x:0.28,y:0}, targetDist=46, focusPos=null;
+const clock = new THREE.Clock();
+
+function noiseTexture(base, spots, size=128){
+  const c=document.createElement('canvas'); c.width=c.height=size;
+  const ctx=c.getContext('2d');
+  ctx.fillStyle=base; ctx.fillRect(0,0,size,size);
+  for(let i=0;i<900;i++){
+    ctx.fillStyle=spots[Math.floor(Math.random()*spots.length)];
+    ctx.globalAlpha=0.05+Math.random()*0.12;
+    const r=1+Math.random()*3.2;
+    ctx.beginPath(); ctx.arc(Math.random()*size,Math.random()*size,r,0,Math.PI*2); ctx.fill();
+  }
+  ctx.globalAlpha=1;
+  const tex=new THREE.CanvasTexture(c); tex.wrapS=tex.wrapT=THREE.RepeatWrapping;
+  return tex;
+}
+
+const PLANETS = [
+  {key:'mercury', r:1.1, dist:9,  speed:0.9,  base:'#9a938d', spots:['#c9c2ba','#6b655f']},
+  {key:'venus',   r:1.7, dist:13, speed:0.7,  base:'#d8b072', spots:['#e8caa0','#a8804a']},
+  {key:'earth',   r:1.8, dist:17.5,speed:0.55,base:'#2f6fb0', spots:['#4f9a5c','#8fc7e8']},
+  {key:'mars',    r:1.35,dist:22, speed:0.45, base:'#a8492f', spots:['#c96a48','#6e2f1c']},
+  {key:'jupiter', r:3.1, dist:29, speed:0.3,  base:'#c9a06a', spots:['#e0c090','#8a6a44','#d9b884']},
+  {key:'saturn',  r:2.7, dist:36, speed:0.24, base:'#d9c193', spots:['#efe0bb','#b39a68']},
+  {key:'uranus',  r:2.0, dist:42, speed:0.18, base:'#8fd6d1', spots:['#bdeae6','#5fa8a4']},
+  {key:'neptune', r:1.95,dist:48, speed:0.14, base:'#3f5fc9', spots:['#6f8ce0','#293f8f']},
+];
+
+function init(){
+  scene = new THREE.Scene();
+  camera = new THREE.PerspectiveCamera(52, innerWidth/innerHeight, 0.1, 800);
+  renderer = new THREE.WebGLRenderer({antialias:true});
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  document.getElementById('scene').appendChild(renderer.domElement);
+
+  // stars
+  const starGeo = new THREE.BufferGeometry();
+  const starCount = 2200, pos = new Float32Array(starCount*3);
+  for(let i=0;i<starCount;i++){
+    const r = 180+Math.random()*400, th=Math.random()*Math.PI*2, ph=Math.acos(2*Math.random()-1);
+    pos[i*3]=r*Math.sin(ph)*Math.cos(th); pos[i*3+1]=r*Math.sin(ph)*Math.sin(th); pos[i*3+2]=r*Math.cos(ph);
+  }
+  starGeo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+  stars = new THREE.Points(starGeo, new THREE.PointsMaterial({color:0xffffff,size:1.1,sizeAttenuation:true}));
+  scene.add(stars);
+
+  scene.add(new THREE.AmbientLight(0x223055, 0.55));
+  const sunLight = new THREE.PointLight(0xfff2cf, 2.4, 300);
+  scene.add(sunLight);
+
+  const sunTex = noiseTexture('#f5b23c', ['#ffe08a','#c9781f','#ffd166']);
+  sun = new THREE.Mesh(new THREE.SphereGeometry(4.2, 48, 48),
+    new THREE.MeshBasicMaterial({map:sunTex, color:0xffdca0}));
+  scene.add(sun);
+  const glow = new THREE.Mesh(new THREE.SphereGeometry(5.2, 32,32),
+    new THREE.MeshBasicMaterial({color:0xffcf6b, transparent:true, opacity:0.12}));
+  scene.add(glow);
+
+  PLANETS.forEach(p=>{
+    const orbitGeo = new THREE.RingGeometry(p.dist-0.04, p.dist+0.04, 128);
+    const orbitMat = new THREE.MeshBasicMaterial({color:0x33406e, side:THREE.DoubleSide, transparent:true, opacity:0.35});
+    const ring = new THREE.Mesh(orbitGeo, orbitMat); ring.rotation.x = Math.PI/2;
+    scene.add(ring);
+
+    const tex = noiseTexture(p.base, p.spots);
+    const mat = new THREE.MeshStandardMaterial({map:tex, roughness:0.85, metalness:0.05});
+    const mesh = new THREE.Mesh(new THREE.SphereGeometry(p.r, 40, 40), mat);
+    mesh.userData = {key:p.key, dist:p.dist, speed:p.speed, angle:Math.random()*Math.PI*2, r:p.r};
+    scene.add(mesh);
+
+    if(p.key==='saturn'){
+      const ringGeo = new THREE.RingGeometry(p.r*1.5, p.r*2.4, 64);
+      const ringMat = new THREE.MeshBasicMaterial({color:0xd9c193, side:THREE.DoubleSide, transparent:true, opacity:0.55});
+      const satRing = new THREE.Mesh(ringGeo, ringMat);
+      satRing.rotation.x = Math.PI/2.4;
+      mesh.add(satRing);
+    }
+    planets.push(mesh);
+  });
+
+  raycaster = new THREE.Raycaster();
+  mouse = new THREE.Vector2();
+
+  window.addEventListener('resize', onResize);
+  const dom = renderer.domElement;
+  dom.addEventListener('pointerdown', e=>{dragging=true; lastX=e.clientX; lastY=e.clientY;});
+  window.addEventListener('pointerup', ()=>dragging=false);
+  window.addEventListener('pointermove', e=>{
+    if(dragging){
+      targetAngle.y += (e.clientX-lastX)*0.005;
+      targetAngle.x = Math.max(-1.1, Math.min(1.1, targetAngle.x + (e.clientY-lastY)*0.004));
+      lastX=e.clientX; lastY=e.clientY;
+      document.getElementById('hint').classList.add('hide');
+    }
+  });
+  dom.addEventListener('wheel', e=>{
+    targetDist = Math.max(10, Math.min(90, targetDist + e.deltaY*0.03));
+  }, {passive:true});
+  dom.addEventListener('click', onClick);
+  document.getElementById('close').addEventListener('click', closePanel);
+
+  animate();
+}
+
+function onClick(e){
+  mouse.x = (e.clientX/innerWidth)*2-1;
+  mouse.y = -(e.clientY/innerHeight)*2+1;
+  raycaster.setFromCamera(mouse, camera);
+  const hits = raycaster.intersectObjects(planets);
+  if(hits.length){ openPanel(hits[0].object.userData.key); }
+}
+
+function openPanel(key){
+  const d = DATA[key];
+  document.getElementById('p-tag').textContent = d.tag;
+  document.getElementById('p-title').textContent = d.title;
+  document.getElementById('p-lead').textContent = d.lead;
+  const wrap = document.getElementById('p-items'); wrap.innerHTML='';
+  d.items.forEach(([b,s])=>{
+    const el = document.createElement('div'); el.className='item';
+    el.innerHTML = `<b>${b}</b>${s?`<span>${s}</span>`:''}`;
+    wrap.appendChild(el);
+  });
+  document.getElementById('panel').classList.add('open');
+  document.getElementById('hint').classList.add('hide');
+}
+function closePanel(){ document.getElementById('panel').classList.remove('open'); }
+
+function onResize(){
+  camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+}
+
+function animate(){
+  requestAnimationFrame(animate);
+  const dt = clock.getDelta();
+  planets.forEach(p=>{
+    p.userData.angle += dt*0.12*p.userData.speed;
+    p.position.set(Math.cos(p.userData.angle)*p.userData.dist, 0, Math.sin(p.userData.angle)*p.userData.dist);
+    p.rotation.y += dt*0.3;
+  });
+  sun.rotation.y += dt*0.05;
+  stars.rotation.y += dt*0.002;
+
+  camAngle.x += (targetAngle.x-camAngle.x)*0.06;
+  camAngle.y += (targetAngle.y-camAngle.y)*0.06;
+  camDist += (targetDist-camDist)*0.08;
+  camera.position.set(
+    camDist*Math.cos(camAngle.x)*Math.sin(camAngle.y),
+    camDist*Math.sin(camAngle.x),
+    camDist*Math.cos(camAngle.x)*Math.cos(camAngle.y)
+  );
+  camera.lookAt(0,0,0);
+  renderer.render(scene, camera);
+}
+init();
+</script>
+</body>
+</html>
